@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7f7f6a5615d24bd8b5d006a4a93ed5f8" Name="Diagram1">
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Job" Width="1.5" PointX="3" PointY="7.75" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Others" Width="1.5" PointX="3" PointY="11.25" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Experience" Width="1.5" PointX="3.375" PointY="13.875" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Education" Width="1.5" PointX="3.375" PointY="4" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.User" Width="1.5" PointX="0.75" PointY="8.125" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_Education_User" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_Experience_User" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_Job_User" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_Others_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
