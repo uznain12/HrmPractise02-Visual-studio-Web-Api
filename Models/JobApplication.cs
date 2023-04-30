@@ -12,22 +12,25 @@ namespace HrmPractise02
     using System;
     using System.Collections.Generic;
     
-    public partial class Job
+    public partial class JobApplication
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Job()
+        public JobApplication()
         {
-            this.JobApplications = new HashSet<JobApplication>();
+            this.Shortlists = new HashSet<Shortlist>();
         }
     
-        public int Jid { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Salary { get; set; }
-        public Nullable<int> LastDateOfApply { get; set; }
-        public string Location { get; set; }
+        public int JobApplicationID { get; set; }
+        public Nullable<int> Jid { get; set; }
+        public Nullable<int> Uid { get; set; }
+        public string name { get; set; }
+        public string status { get; set; }
+        public string shortlist { get; set; }
+        public string DocumentPath { get; set; }
     
+        public virtual Job Job { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<JobApplication> JobApplications { get; set; }
+        public virtual ICollection<Shortlist> Shortlists { get; set; }
+        public virtual User User { get; set; }
     }
 }

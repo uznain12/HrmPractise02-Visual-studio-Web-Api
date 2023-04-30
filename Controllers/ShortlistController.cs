@@ -1,6 +1,6 @@
 ﻿
-
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,49 +8,18 @@ using System.Web.Http;
 
 namespace HrmPractise02.Controllers
 {
-    public class JobController : ApiController
+    public class ShortlistController : ApiController
     {
         PracticeHrmDBEntities db = new PracticeHrmDBEntities();
 
         [HttpGet]
-        public HttpResponseMessage JobGet(/*int uid*/)
+        public HttpResponseMessage ShortlisGet(int sid)
         {
             //select *from user
             try
             {
-                var app = db.Jobs/*.Where(e => e.Uid == uid)*/.OrderBy(b => b.Jid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, app);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-        [HttpGet]
-        public HttpResponseMessage JobidGet(int Jid)
-        {
-            //select *from user
-            try
-            {
-                var app = db.Jobs.Where(e => e.Jid == Jid).OrderBy(b => b.Jid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, app);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-        [HttpGet]
-        public HttpResponseMessage JobDetailGet(int jid)
-        {
-            //select *from user
-            try
-            {
-                var app = db.Jobs.Where(e => e.Jid == jid).OrderBy(b => b.Jid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, app);
+                var edu = db.Shortlists.Where(e => e.ShortlistedID == sid).OrderBy(b => b.ShortlistedID).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
             catch (Exception ex)
@@ -59,14 +28,14 @@ namespace HrmPractise02.Controllers
             }
         }
         [HttpPost]
-        public HttpResponseMessage JobPost(Job u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
+        public HttpResponseMessage SHortlistPost(Shortlist u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {
             try
             {
                 //Insert Into User Table
-                var users = db.Jobs.Add(u);
+                var shortlist = db.Shortlists.Add(u);
                 db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, u.Title + " " + "Record Inserted");
+                return Request.CreateResponse(HttpStatusCode.OK, u.ShortlistedID + " " + "Record Inserted");
             }
             catch (Exception ex)
             {
@@ -75,12 +44,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage UpdateJob(Job u)
+        public HttpResponseMessage UpdateEducation(Education u)
         {
             try
             {
 
-                var original = db.Jobs.Find(u.Jid);
+                var original = db.Educations.Find(u.EduID);
                 if (original == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
@@ -97,12 +66,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage DeleteJob(int Jid)
+        public HttpResponseMessage DeleteEducation(int EduID)
         {
             try
             {
 
-                var original = db.Jobs.Find(Jid);
+                var original = db.Educations.Find(EduID);
                 if (original == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No Record Found");
@@ -125,7 +94,7 @@ namespace HrmPractise02.Controllers
             try
             {
 
-                var search = db.Jobs.Where(b => b.Title == u).OrderBy(b => b.Jid).ToList();
+                var search = db.Educations.Where(b => b.Degree == u).OrderBy(b => b.EduID).ToList();
 
                 if (search == null)
                 {

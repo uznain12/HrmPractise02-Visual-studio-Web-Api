@@ -25,11 +25,13 @@ namespace HrmPractise02
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Job> Jobs { get; set; }
-        public virtual DbSet<Others> Others { get; set; }
-        public virtual DbSet<Experience> Experiences { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<Leave_Application> Leave_Application { get; set; }
+        public virtual DbSet<Shortlist> Shortlists { get; set; }
         public virtual DbSet<Education> Educations { get; set; }
+        public virtual DbSet<Job> Jobs { get; set; }
+        public virtual DbSet<JobApplication> JobApplications { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Experience> Experiences { get; set; }
     }
 }
