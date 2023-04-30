@@ -14,20 +14,14 @@ namespace HrmPractise02
     
     public partial class Job
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Job()
-        {
-            this.JobApplications = new HashSet<JobApplication>();
-        }
-    
         public int Jid { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Salary { get; set; }
+        public Nullable<int> Uid { get; set; }
         public Nullable<int> LastDateOfApply { get; set; }
         public string Location { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<JobApplication> JobApplications { get; set; }
+        public virtual User User { get; set; }
     }
 }

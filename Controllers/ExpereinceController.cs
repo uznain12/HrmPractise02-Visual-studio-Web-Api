@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,12 +10,12 @@ namespace HrmPractise02.Controllers
     {
         PracticeHrmDBEntities db = new PracticeHrmDBEntities();
         [HttpGet]
-        public HttpResponseMessage ExperienceGet(int expId)
+        public HttpResponseMessage ExperienceGet(int id)
         {
             //select *from user
             try
             {
-                var exp = db.Experiences.Where(e => e.Uid == expId).OrderBy(b => b.ExpID).ToList();
+                var exp = db.Experiences.Where(e => e.Uid == id).OrderBy(b => b.ExpID).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, exp);
 
             }

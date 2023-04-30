@@ -12,11 +12,12 @@ namespace HrmPractise02
     using System;
     using System.Collections.Generic;
     
-    public partial class Shortlist
+    public partial class Others
     {
-        public int ShortlistedID { get; set; }
-        public Nullable<int> ApplicationID { get; set; }
+        public int oid { get; set; }
+        public Nullable<int> Uid { get; set; }
+        public string title { get; set; }
     
-        public virtual JobApplication JobApplication { get; set; }
+        public virtual User User { get; set; }
     }
 }

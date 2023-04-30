@@ -18,10 +18,8 @@ namespace HrmPractise02
         public Nullable<int> Uid { get; set; }
         public string Company { get; set; }
         public string Title { get; set; }
-        public string Startdate { get; set; }
-        public string currentwork { get; set; }
-        public string Enddate { get; set; }
-        public string otherskill { get; set; }
+        public Nullable<int> Startdate { get; set; }
+        public Nullable<int> Enddate { get; set; }
         public string hasexperienced { get; set; }
     
         public virtual User User { get; set; }

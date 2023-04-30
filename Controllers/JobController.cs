@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -27,21 +25,6 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-        [HttpGet]
-        public HttpResponseMessage JobidGet(int Jid)
-        {
-            //select *from user
-            try
-            {
-                var app = db.Jobs.Where(e => e.Jid == Jid).OrderBy(b => b.Jid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, app);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
 
         [HttpGet]
         public HttpResponseMessage JobDetailGet(int jid)
@@ -49,7 +32,7 @@ namespace HrmPractise02.Controllers
             //select *from user
             try
             {
-                var app = db.Jobs.Where(e => e.Jid == jid).OrderBy(b => b.Jid).ToList();
+                var app = db.Jobs.Where(e => e.Uid == jid).OrderBy(b => b.Jid).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, app);
 
             }

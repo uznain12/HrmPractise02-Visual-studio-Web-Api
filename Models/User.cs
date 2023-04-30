@@ -19,8 +19,8 @@ namespace HrmPractise02
         {
             this.Educations = new HashSet<Education>();
             this.Experiences = new HashSet<Experience>();
-            this.Leave_Application = new HashSet<Leave_Application>();
-            this.JobApplications = new HashSet<JobApplication>();
+            this.Jobs = new HashSet<Job>();
+            this.Others = new HashSet<Others>();
         }
     
         public int Uid { get; set; }
@@ -29,20 +29,20 @@ namespace HrmPractise02
         public string email { get; set; }
         public string mobile { get; set; }
         public string cnic { get; set; }
-        public string dob { get; set; }
+        public Nullable<System.DateTime> dob { get; set; }
         public string gender { get; set; }
         public string address { get; set; }
         public string password { get; set; }
         public string role { get; set; }
-        public string image { get; set; }
+        public byte[] image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Education> Educations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Experience> Experiences { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Leave_Application> Leave_Application { get; set; }
+        public virtual ICollection<Job> Jobs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<JobApplication> JobApplications { get; set; }
+        public virtual ICollection<Others> Others { get; set; }
     }
 }
