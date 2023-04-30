@@ -12,17 +12,15 @@ namespace HrmPractise02
     using System;
     using System.Collections.Generic;
     
-    public partial class Experience
+    public partial class Leave_Application
     {
-        public int ExpID { get; set; }
+        public int leaveappid { get; set; }
         public Nullable<int> Uid { get; set; }
-        public string Company { get; set; }
-        public string Title { get; set; }
-        public string Startdate { get; set; }
-        public string currentwork { get; set; }
-        public string Enddate { get; set; }
-        public string otherskill { get; set; }
-        public string hasexperienced { get; set; }
+        public string leavetype { get; set; }
+        public string startdate { get; set; }
+        public string enddate { get; set; }
+        public string reason { get; set; }
+        public string status { get; set; }
     
         public virtual User User { get; set; }
     }
