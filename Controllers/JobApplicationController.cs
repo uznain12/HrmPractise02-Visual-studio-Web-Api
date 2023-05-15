@@ -31,6 +31,24 @@ namespace HrmPractise02.Controllers
         }
 
 
+        [HttpGet]    // With Id
+        public HttpResponseMessage JobApplicationHrSideGet(int applicationid)
+        {
+            //select *from user
+            try
+            {
+                var edu = db.JobApplications.Where(e => e.JobApplicationID == applicationid).OrderBy(b => b.JobApplicationID).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, edu);
+
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
         [HttpGet] // All Without id
         public HttpResponseMessage AllJobApplicationGet()
         {
@@ -84,7 +102,7 @@ namespace HrmPractise02.Controllers
                 string status = form["status"];
                 string shortlist = form["shortlist"];
 
-                var user = db.JobApplications.Where(s => s.Jid == Jid).FirstOrDefault();
+                var user = db.JobApplications.Where(s => s.Jid == Jid && s.Uid==Uid).FirstOrDefault();
                 if (user != null)
                     return Request.CreateResponse(HttpStatusCode.OK, "Already Applied");
 
@@ -192,5 +210,245 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // For Automatically Show reject if user not meet the requirements 
+        //[HttpPost]
+        //public HttpResponseMessage JobFileApplicationWithFilterPost()
+        //{
+        //    try
+        //    {
+        //        var form = HttpContext.Current.Request.Form;
+
+        //        int Jid = int.Parse(form["Jid"]);
+        //        int Uid = int.Parse(form["Uid"]);
+        //        string name = form["name"];
+        //        string status = form["status"];
+        //        string shortlist = form["shortlist"];
+
+        //        // Checking if a JobApplication already exists with the same Jid and Uid
+        //        var existingApplication = db.JobApplications
+        //                                    .FirstOrDefault(s => s.Jid == Jid && s.Uid == Uid);
+        //        if (existingApplication != null)
+        //            return Request.CreateResponse(HttpStatusCode.OK, "Already Applied");
+
+        //        var userEducation = db.Educations.Where(e => e.Uid == Uid).OrderByDescending(e => e.EduID).FirstOrDefault();
+        //        if (userEducation == null)
+        //            return Request.CreateResponse(HttpStatusCode.BadRequest, "User education not found");
+
+        //        var job = db.Jobs.Where(j => j.Jid == Jid).FirstOrDefault();
+        //        if (job == null)
+        //            return Request.CreateResponse(HttpStatusCode.BadRequest, "Job not found");
+
+        //        List<string> degreeOrder = new List<string> { "Primary", "Middle", "Matric", "Inter", "Bachelor", "Master", "PhD" };
+
+        //        if (job.Title.ToLower() == "Teacher" && degreeOrder.IndexOf(userEducation.Degree) < degreeOrder.IndexOf("Inter"))
+        //        {
+        //            status = "Rejected";
+        //        }
+
+        //        var files = HttpContext.Current.Request.Files;
+        //        string DocumentPath = "";
+
+        //        if (files.Count > 0)
+        //        {
+        //            string path = HttpContext.Current.Server.MapPath("~/Documents");
+        //            if (!Directory.Exists(path))
+        //            {
+        //                Directory.CreateDirectory(path);
+        //            }
+
+        //            var document = files[0];
+        //            DocumentPath = Path.Combine(path, document.FileName);
+        //            document.SaveAs(DocumentPath);
+        //        }
+
+        //        JobApplication us = new JobApplication()
+        //        {
+        //            Jid = Jid,
+        //            Uid = Uid,
+        //            name = name,
+        //            status = status,
+        //            shortlist = shortlist,
+        //            DocumentPath = DocumentPath
+        //        };
+
+        //        JobApplication user1 = db.JobApplications.Add(us);
+        //        db.SaveChanges();
+
+        //        return Request.CreateResponse(HttpStatusCode.OK, "Applied");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
+        [HttpPost]
+        public HttpResponseMessage JobFileApplicationWithFilterPost()
+        {
+            try
+            {
+                var form = HttpContext.Current.Request.Form;
+
+                int Jid = int.Parse(form["Jid"]);
+                int Uid = int.Parse(form["Uid"]);
+                string name = form["name"];
+                string shortlist = form["shortlist"];
+
+                var user = db.JobApplications.Where(s => s.Jid == Jid && s.Uid == Uid).FirstOrDefault();
+                if (user != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, "Already Applied");
+
+                var files = HttpContext.Current.Request.Files;
+                string DocumentPath = "";
+
+                if (files.Count > 0)
+                {
+                    string path = HttpContext.Current.Server.MapPath("~/Documents");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    var document = files[0];
+                    DocumentPath = Path.Combine(path, document.FileName);
+                    document.SaveAs(DocumentPath);
+                }
+
+                var userEducation = db.Educations.Where(e => e.Uid == Uid).OrderByDescending(e => e.EduID).FirstOrDefault();
+                if (userEducation == null)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "User education not found");
+
+                var job = db.Jobs.Where(j => j.Jid == Jid).FirstOrDefault();
+                if (job == null)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Job not found");
+
+                List<string> degreeOrder = new List<string> { "Primary", "Middle", "Matric", "Inter", "Bachelor", "Master", "PhD" };
+
+                string status = "Pending";
+
+                if (job.Title.ToLower() == "teacher" && degreeOrder.IndexOf(userEducation.Degree) < degreeOrder.IndexOf("Primary"))
+                {
+                    status = "Rejected";
+                }
+
+                JobApplication us = new JobApplication()
+                {
+                    Jid = Jid,
+                    Uid = Uid,
+                    name = name,
+                    status = status,
+                    shortlist = shortlist,
+                    DocumentPath = DocumentPath
+                };
+
+                JobApplication user1 = db.JobApplications.Add(us);
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Applied");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+        // This Code is for   many else if coditions and this code also correct 
+        //[HttpPost]
+        //public HttpResponseMessage JobFileApplicationWithFilterPost2()
+        //{
+        //    try
+        //    {
+        //        var form = HttpContext.Current.Request.Form;
+
+        //        int Jid = int.Parse(form["Jid"]);
+        //        int Uid = int.Parse(form["Uid"]);
+        //        string name = form["name"];
+        //        string shortlist = form["shortlist"];
+
+        //        var user = db.JobApplications.Where(s => s.Jid == Jid && s.Uid == Uid).FirstOrDefault();
+        //        if (user != null)
+        //            return Request.CreateResponse(HttpStatusCode.OK, "Already Applied");
+
+        //        var files = HttpContext.Current.Request.Files;
+        //        string DocumentPath = "";
+
+        //        if (files.Count > 0)
+        //        {
+        //            string path = HttpContext.Current.Server.MapPath("~/Documents");
+        //            if (!Directory.Exists(path))
+        //            {
+        //                Directory.CreateDirectory(path);
+        //            }
+
+        //            var document = files[0];
+        //            DocumentPath = Path.Combine(path, document.FileName);
+        //            document.SaveAs(DocumentPath);
+        //        }
+
+        //        var userEducation = db.Educations.Where(e => e.Uid == Uid).OrderByDescending(e => e.EduID).FirstOrDefault();
+        //        if (userEducation == null)
+        //            return Request.CreateResponse(HttpStatusCode.BadRequest, "User education not found");
+
+        //        var job = db.Jobs.Where(j => j.Jid == Jid).FirstOrDefault();
+        //        if (job == null)
+        //            return Request.CreateResponse(HttpStatusCode.BadRequest, "Job not found");
+
+        //        List<string> degreeOrder = new List<string> { "Primary", "Middle", "Matric", "Inter", "Bachelor", "Master", "PhD" };
+
+        //        string status = "Pending";
+
+        //        if (job.Title.ToLower() == "teacher" && degreeOrder.IndexOf(userEducation.Degree) < degreeOrder.IndexOf("Inter"))
+        //        {
+        //            status = "Rejected";
+        //        }
+        //        else if (job.Title.ToLower() == "assistant professor" && degreeOrder.IndexOf(userEducation.Degree) < degreeOrder.IndexOf("Bachelor"))
+        //        {
+        //            status = "Rejected";
+        //        }
+
+        //        JobApplication us = new JobApplication()
+        //        {
+        //            Jid = Jid,
+        //            Uid = Uid,
+        //            name = name,
+        //            status = status,
+        //            shortlist = shortlist,
+        //            DocumentPath = DocumentPath
+        //        };
+
+        //        JobApplication user1 = db.JobApplications.Add(us);
+        //        db.SaveChanges();
+
+        //        return Request.CreateResponse(HttpStatusCode.OK, "Applied");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
     }
 }

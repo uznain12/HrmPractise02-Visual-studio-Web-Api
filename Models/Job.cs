@@ -22,10 +22,12 @@ namespace HrmPractise02
     
         public int Jid { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
+        public string qualification { get; set; }
         public string Salary { get; set; }
-        public Nullable<int> LastDateOfApply { get; set; }
+        public string experience { get; set; }
+        public string LastDateOfApply { get; set; }
         public string Location { get; set; }
+        public string Description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobApplication> JobApplications { get; set; }

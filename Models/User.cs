@@ -21,6 +21,8 @@ namespace HrmPractise02
             this.JobApplications = new HashSet<JobApplication>();
             this.Leave_Application = new HashSet<Leave_Application>();
             this.Experiences = new HashSet<Experience>();
+            this.Attendances = new HashSet<Attendance>();
+            this.JobAssignments = new HashSet<JobAssignment>();
         }
     
         public int Uid { get; set; }
@@ -44,5 +46,9 @@ namespace HrmPractise02
         public virtual ICollection<Leave_Application> Leave_Application { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Experience> Experiences { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Attendance> Attendances { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JobAssignment> JobAssignments { get; set; }
     }
 }

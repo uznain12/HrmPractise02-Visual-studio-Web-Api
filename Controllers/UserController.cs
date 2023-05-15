@@ -38,6 +38,32 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+        [HttpPost]
+        public HttpResponseMessage Signup(User newuser)
+        {
+            try
+            {
+                var user = db.Users.Where(s => s.email == newuser.email).FirstOrDefault();
+                if (user != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, "Email Exsist");
+
+                User user1 = db.Users.Add(newuser);
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Created");
+
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errorMessages = ex.EntityValidationErrors
+                        .SelectMany(x => x.ValidationErrors)
+                        .Select(x => x.ErrorMessage);
+                var fullErrorMessage = string.Join("; ", errorMessages);
+                var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, exceptionMessage);
+            }
+
+        }
         [HttpGet]
         public HttpResponseMessage UserGet(int id)
         {
@@ -53,6 +79,91 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+        //User Get by roles and Id
+
+        //[HttpGet]
+        //public HttpResponseMessage UserroleGet(int id)
+        //{
+        //    try
+        //    {
+        //        // Filter records by role (employee and applicant)
+        //        var user = db.Users
+        //            .Where(e => e.Uid == id && (e.role == "employee" || e.role == "applicant"))
+        //            .OrderBy(b => b.Uid)
+        //            .ToList();
+        //        return Request.CreateResponse(HttpStatusCode.OK, user);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
+
+
+        //user get  by only roles
+        [HttpGet]
+        public HttpResponseMessage UserroleGet()
+        {
+            try
+            {
+                // Filter records by role (employee and applicant)
+                var users = db.Users
+                    .Where(e => e.role == "employee" /*|| e.role == "applicant"*/)
+                    .OrderBy(b => b.Uid)
+                    .ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, users);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        // ALl User gets by roles
+
+        [HttpGet]
+        public HttpResponseMessage UserbyroleGet()
+        {
+            try
+            {
+                // Filter records by role (employee and applicant)
+                var users = db.Users
+                    .Where(e => e.role == "employee" || e.role == "applicant")
+                    .OrderBy(b => b.Uid)
+                    .ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, users);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        // Committe members get
+
+        [HttpGet]
+        public HttpResponseMessage CommittemembersGet()
+        {
+            try
+            {
+                // Filter records by role (employee and applicant)
+                var users = db.Users
+                    .Where(e => e.role == "comemployee" /*|| e.role == "applicant"*/)
+                    .OrderBy(b => b.Uid)
+                    .ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, users);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
 
         [HttpGet]
         public HttpResponseMessage AlluserGet()
@@ -455,7 +566,7 @@ namespace HrmPractise02.Controllers
                     Directory.CreateDirectory(path);
                 }
 
-                string fileData = "";
+                string fileData = null;
                 for (int i = 0; i < files.Count; i++)
                 {
                     fileData = files[i].FileName;
@@ -502,7 +613,7 @@ namespace HrmPractise02.Controllers
             try
             {
 
-                var search = db.Users.Where(b => b.Fname == u).OrderBy(b => b.Uid).ToList();
+                var search = db.Users.Where(b => b.Fname == u || b.Lname==u).OrderBy(b => b.Uid).ToList();
 
                 if (search == null)
                 {

@@ -1,6 +1,5 @@
-﻿
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,17 +7,17 @@ using System.Web.Http;
 
 namespace HrmPractise02.Controllers
 {
-    public class JobController : ApiController
+    public class JobassignmentController : ApiController
     {
         PracticeHrmDBEntities db = new PracticeHrmDBEntities();
 
         [HttpGet]
-        public HttpResponseMessage JobGet(/*int uid*/)
+        public HttpResponseMessage AllJobassignmentGet(/*int uid*/)
         {
             //select *from user
             try
             {
-                var app = db.Jobs/*.Where(e => e.Uid == uid)*/.OrderBy(b => b.Jid).ToList();
+                var app = db.JobAssignments/*.Where(e => e.Uid == uid)*/.OrderBy(b => b.assignmentid).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, app);
 
             }
@@ -27,13 +26,13 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-        [HttpGet]
-        public HttpResponseMessage JobidGet(int Jid)
+        [HttpGet]   // based on uid
+        public HttpResponseMessage JobassignmentwithidGet(int uid)
         {
             //select *from user
             try
             {
-                var app = db.Jobs.Where(e => e.Jid == Jid).OrderBy(b => b.Jid).ToList();
+                var app = db.JobAssignments.Where(e => e.Uid == uid).OrderBy(b => b.assignmentid).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, app);
 
             }
@@ -59,14 +58,14 @@ namespace HrmPractise02.Controllers
             }
         }
         [HttpPost]
-        public HttpResponseMessage JobPost(Job u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
+        public HttpResponseMessage JobassignmentPost(JobAssignment u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {
             try
             {
                 //Insert Into User Table
-                var users = db.Jobs.Add(u);
+                var users = db.JobAssignments.Add(u);
                 db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, u.Title + " " + "Record Inserted");
+                return Request.CreateResponse(HttpStatusCode.OK, u.JobApplicationID + " " + "Record Inserted");
             }
             catch (Exception ex)
             {
@@ -140,55 +139,6 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
-
-
-
-
-
-
-
-        //This is the filter that is used to chehck user complete their education and expereince or not if not then show please complete education and expereince if yes than show the jobs
-
-
-
-        [HttpGet]
-        public HttpResponseMessage WithCheckfilterJobGet(int uid)
-        {
-            try
-            {
-                // Get the user
-                var user = db.Users.Find(uid);
-
-                // Check if the user exists
-                if (user == null)
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "User not found.");
-                }
-
-                // Check if the user has completed the education and experience sections
-                if (!user.Educations.Any() || !user.Experiences.Any())
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
-                }
-
-                // Get the jobs
-                var jobs = db.Jobs.OrderBy(b => b.Jid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, jobs);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-
-
-
-
-
-
-
-
     }
 }
+

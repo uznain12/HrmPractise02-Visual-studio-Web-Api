@@ -18,6 +18,7 @@ namespace HrmPractise02
         public JobApplication()
         {
             this.Shortlists = new HashSet<Shortlist>();
+            this.JobAssignments = new HashSet<JobAssignment>();
         }
     
         public int JobApplicationID { get; set; }
@@ -28,9 +29,11 @@ namespace HrmPractise02
         public string shortlist { get; set; }
         public string DocumentPath { get; set; }
     
-        public virtual Job Job { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shortlist> Shortlists { get; set; }
         public virtual User User { get; set; }
+        public virtual Job Job { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JobAssignment> JobAssignments { get; set; }
     }
 }
