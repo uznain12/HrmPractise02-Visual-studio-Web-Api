@@ -12,17 +12,13 @@ namespace HrmPractise02
     using System;
     using System.Collections.Generic;
     
-    public partial class Leave_Application
+    public partial class CommitteeMember
     {
-        public int leaveappid { get; set; }
+        public int CommitteeImemberId { get; set; }
+        public Nullable<int> CommitteeId { get; set; }
         public Nullable<int> Uid { get; set; }
-        public string leavetype { get; set; }
-        public string startdate { get; set; }
-        public string enddate { get; set; }
-        public string reason { get; set; }
-        public string status { get; set; }
-        public Nullable<System.DateTime> applydate { get; set; }
     
+        public virtual Committee Committee { get; set; }
         public virtual User User { get; set; }
     }
 }

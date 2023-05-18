@@ -7,17 +7,16 @@ using System.Web.Http;
 
 namespace HrmPractise02.Controllers
 {
-    public class LeaveController : ApiController
+    public class CommitteeController : ApiController
     {
         PracticeHrmDBEntities db = new PracticeHrmDBEntities();
-
         [HttpGet]
-        public HttpResponseMessage AllLeaveGet()
+        public HttpResponseMessage AllCommitteeGet()
         {
             //select *from user
             try
             {
-                var edu = db.Leave_Application.OrderBy(b => b.leaveappid).ToList();
+                var edu = db.Committees.OrderBy(b => b.CommitteeId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
@@ -28,12 +27,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage LeaveGet(int uid)
+        public HttpResponseMessage CommitteeGet(int comid)
         {
             //select *from user
             try
             {
-                var edu = db.Leave_Application.Where(e => e.Uid == uid).OrderBy(b => b.leaveappid).ToList();
+                var edu = db.Committees.Where(e => e.CommitteeId == comid).OrderBy(b => b.CommitteeId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
@@ -42,73 +41,15 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
-        // This functions is for show pending leaves of user
-
-        [HttpGet]
-        public HttpResponseMessage PendingLeaveGet(int uid)
-        {
-            //select *from user
-            try
-            {
-                var edu = db.Leave_Application.Where(e => e.Uid == uid && e.status == "Pending").OrderBy(b => b.leaveappid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, edu);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-
-        // This functions is for show rejected leaves of user
-
-        [HttpGet]
-        public HttpResponseMessage RejectedLeaveGet(int uid)
-        {
-            //select *from user
-            try
-            {
-                var edu = db.Leave_Application.Where(e => e.Uid == uid && e.status == "rejected").OrderBy(b => b.leaveappid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, edu);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-        // This functions is for show Approved leaves of user
-
-        [HttpGet]
-        public HttpResponseMessage ApprovedLeaveGet(int uid)
-        {
-            //select *from user
-            try
-            {
-                var edu = db.Leave_Application.Where(e => e.Uid == uid && e.status == "approved").OrderBy(b => b.leaveappid).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, edu);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-
-
         [HttpPost]
-        public HttpResponseMessage LeavePost(Leave_Application u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
+        public HttpResponseMessage Createcommitte(Committee u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {
             try
             {
                 //Insert Into User Table
-                var educations = db.Leave_Application.Add(u);
+                var educations = db.Committees.Add(u);
                 db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, u.leavetype + " " + "Record Inserted");
+                return Request.CreateResponse(HttpStatusCode.OK, u.CommitteeTitle + " " + "Record Inserted");
             }
             catch (Exception ex)
             {
@@ -117,12 +58,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage UpdateLeave(Leave_Application u)
+        public HttpResponseMessage UpdateEducation(Education u)
         {
             try
             {
 
-                var original = db.Leave_Application.Find(u.leaveappid);
+                var original = db.Educations.Find(u.EduID);
                 if (original == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
@@ -139,12 +80,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage DeleteLeave(int leaveappid)
+        public HttpResponseMessage DeleteCommitte(int CommitteeId)
         {
             try
             {
 
-                var original = db.Leave_Application.Find(leaveappid);
+                var original = db.Committees.Find(CommitteeId);
                 if (original == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No Record Found");
@@ -167,7 +108,7 @@ namespace HrmPractise02.Controllers
             try
             {
 
-                var search = db.Leave_Application.Where(b => b.leavetype == u).OrderBy(b => b.leaveappid).ToList();
+                var search = db.Educations.Where(b => b.Degree == u).OrderBy(b => b.EduID).ToList();
 
                 if (search == null)
                 {

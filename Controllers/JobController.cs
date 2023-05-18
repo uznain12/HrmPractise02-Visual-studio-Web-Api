@@ -18,7 +18,7 @@ namespace HrmPractise02.Controllers
             //select *from user
             try
             {
-                var app = db.Jobs/*.Where(e => e.Uid == uid)*/.OrderBy(b => b.Jid).ToList();
+                var app = db.Jobs/*.Where(e => e.Uid == uid)*/.OrderBy(b => b.Title).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, app);
 
             }
@@ -173,7 +173,7 @@ namespace HrmPractise02.Controllers
                 }
 
                 // Get the jobs
-                var jobs = db.Jobs.OrderBy(b => b.Jid).ToList();
+                var jobs = db.Jobs.OrderBy(b => b.Title).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, jobs);
             }
             catch (Exception ex)

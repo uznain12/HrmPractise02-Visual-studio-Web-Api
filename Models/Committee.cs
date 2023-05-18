@@ -12,25 +12,20 @@ namespace HrmPractise02
     using System;
     using System.Collections.Generic;
     
-    public partial class Job
+    public partial class Committee
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Job()
+        public Committee()
         {
-            this.JobApplications = new HashSet<JobApplication>();
+            this.CommitteeMembers = new HashSet<CommitteeMember>();
         }
     
-        public int Jid { get; set; }
-        public string Title { get; set; }
-        public string qualification { get; set; }
-        public string Salary { get; set; }
-        public string experience { get; set; }
-        public string LastDateOfApply { get; set; }
-        public string Location { get; set; }
-        public string Description { get; set; }
-        public Nullable<int> noofvacancie { get; set; }
+        public int CommitteeId { get; set; }
+        public string CommitteeTitle { get; set; }
+        public Nullable<int> CommitteeHead { get; set; }
     
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<JobApplication> JobApplications { get; set; }
+        public virtual ICollection<CommitteeMember> CommitteeMembers { get; set; }
     }
 }
