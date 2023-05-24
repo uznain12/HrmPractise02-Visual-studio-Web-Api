@@ -17,7 +17,7 @@ namespace HrmPractise02.Controllers
             //select *from user
             try
             {
-                var edu = db.Attendances.Where(e => e.Uid == uid).OrderBy(b => b.Attendanceid).ToList();
+                var edu = db.Attendances.Where(e => e.Uid == uid).OrderBy(b => b.date).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
@@ -466,5 +466,111 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewAttendanceGet(int uid)
+        {
+            try
+            {
+                var attendance = db.Attendances
+                    .Where(a => a.Uid == uid)
+                    .OrderBy(a => a.date)
+                    .Select(a => new
+                    {
+                        a.Attendanceid,
+                        a.Uid,
+                        a.date,
+                        a.checkin,
+                        a.status,
+                        a.checkout
+                    })
+                    .ToList();
+
+                if (!attendance.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Attendance records not found for the specified user.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, attendance);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewAttendanceWithuidandAtendidGet(int uid, int attendid)
+        {
+            try
+            {
+                var attendance = db.Attendances
+                    .Where(a => a.Uid == uid && a.Attendanceid == attendid)
+                    .OrderBy(a => a.Attendanceid)
+                    .Select(a => new
+                    {
+                        a.Attendanceid,
+                        a.Uid,
+                        a.date,
+                        a.checkin,
+                        a.status,
+                        a.checkout
+                    })
+                    .ToList();
+
+                if (!attendance.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Attendance records not found for the specified user and attendance ID.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, attendance);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewWithDateAndIDAttendanceGet(int uid, DateTime Date)
+        {
+            try
+            {
+                var attendance = db.Attendances
+                    .Where(a => a.Uid == uid && a.date == Date )
+                    .OrderBy(a => a.Attendanceid)
+                    .Select(a => new
+                    {
+                        a.Attendanceid,
+                        a.Uid,
+                        a.date,
+                        a.checkin,
+                        a.status,
+                        a.checkout
+                    })
+                    .ToList();
+
+                if (!attendance.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Attendance records not found for the specified user and date.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, attendance);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
     }
 }

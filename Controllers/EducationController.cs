@@ -110,5 +110,47 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewEducationGet(int uid)
+        {
+            try
+            {
+                var education = db.Educations
+                    .Where(e => e.Uid == uid)
+                    .OrderBy(e => e.EduID) // Added this line to sort the records
+                    .Select(e => new
+                    {
+                        e.EduID,
+                        e.Uid,
+                        e.Degree,
+                        e.major,
+                        e.Institute,
+                        e.Board,
+                        e.Startdate,
+                        e.Enddate
+                    })
+                    .ToList();
+
+                if (education == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Education record not found");
+
+                return Request.CreateResponse(HttpStatusCode.OK, education);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
     }
 }

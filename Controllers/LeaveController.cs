@@ -182,5 +182,259 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewAllLeaveapplicationGet()
+        {
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No leave application records found.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, applications);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewLeaveGet(int uid)
+        {
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where user.Uid == uid
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Leave application records not found for the specified user.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, applications);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewPendingLeaveGet(int uid)
+        {
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where user.Uid == uid && leave.status == "Pending"
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Pending leave application records not found for the specified user.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, applications);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewRejectedLeaveGet(int uid)
+        {
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where user.Uid == uid && leave.status == "rejected"
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Rejected leave application records not found for the specified user.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, applications);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewApprovedLeaveGet(int uid)
+        {
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where user.Uid == uid && leave.status == "approved"
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Approved leave application records not found for the specified user.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, applications);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
     }
 }

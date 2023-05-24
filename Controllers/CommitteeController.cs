@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -41,6 +42,31 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        [HttpGet]
+        public HttpResponseMessage CommittwithEmployeeeeGet(int uid)
+        {
+            try
+            {
+                string sqlQuery = @"
+            
+  SELECT c.[CommitteeId], c.[CommitteeTitle], c.[CommitteeHead]
+FROM [PracticeHrmDB].[dbo].[Committee] c
+INNER JOIN [PracticeHrmDB].[dbo].[CommitteeMembers] cm ON c.[CommitteeId] = cm.[CommitteeId]
+WHERE cm.[Uid] 
+ = @uid
+            ORDER BY c.[CommitteeId]";
+
+                var committees = db.Database.SqlQuery<Committee>(sqlQuery, new SqlParameter("@uid", uid)).ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, committees);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpPost]
         public HttpResponseMessage Createcommitte(Committee u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {

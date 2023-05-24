@@ -173,7 +173,21 @@ namespace HrmPractise02.Controllers
                 }
 
                 // Get the jobs
-                var jobs = db.Jobs.OrderBy(b => b.Title).ToList();
+                var jobs = db.Jobs
+                    .OrderBy(j => j.Title)
+                    .Select(j => new
+                    {
+                        j.Jid,
+                        j.Title,
+                        j.qualification,
+                        j.Salary,
+                        j.experience,
+                        j.LastDateOfApply,
+                        j.Location,
+                        j.Description,
+                        j.noofvacancie
+                    })
+                    .ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, jobs);
             }
             catch (Exception ex)
@@ -185,6 +199,77 @@ namespace HrmPractise02.Controllers
 
 
 
+
+        [HttpGet]
+        public HttpResponseMessage NewJobGet()
+        {
+            try
+            {
+                var jobs = db.Jobs
+                    .OrderBy(j => j.Jid)
+                    .Select(j => new
+                    {
+                        j.Jid,
+                        j.Title,
+                        j.qualification,
+                        j.Salary,
+                        j.experience,
+                        j.LastDateOfApply,
+                        j.Location,
+                        j.Description,
+                        j.noofvacancie
+                    })
+                    .ToList();
+
+                if (!jobs.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Job record not found");
+
+                return Request.CreateResponse(HttpStatusCode.OK, jobs);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewJobdetailGet(int jid)
+        {
+            try
+            {
+                var job = db.Jobs
+                    .Where(j => j.Jid == jid)
+                    .Select(j => new
+                    {
+                        j.Jid,
+                        j.Title,
+                        j.qualification,
+                        j.Salary,
+                        j.experience,
+                        j.LastDateOfApply,
+                        j.Location,
+                        j.Description,
+                        j.noofvacancie
+                    })
+                    .FirstOrDefault();
+
+                if (job == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Job record not found");
+
+                return Request.CreateResponse(HttpStatusCode.OK, job);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
 
 

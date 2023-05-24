@@ -17,11 +17,11 @@ namespace HrmPractise02
         public int EduID { get; set; }
         public Nullable<int> Uid { get; set; }
         public string Degree { get; set; }
+        public string major { get; set; }
         public string Institute { get; set; }
         public string Board { get; set; }
         public string Startdate { get; set; }
         public string Enddate { get; set; }
-        public string hasaddededucation { get; set; }
     
         public virtual User User { get; set; }
     }

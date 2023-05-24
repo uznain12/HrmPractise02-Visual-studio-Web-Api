@@ -12,12 +12,12 @@ namespace HrmPractise02.Controllers
     {
         PracticeHrmDBEntities db = new PracticeHrmDBEntities();
         [HttpGet]
-        public HttpResponseMessage ExperienceGet(int expId)
+        public HttpResponseMessage ExperienceGet(int uid)
         {
             //select *from user
             try
             {
-                var exp = db.Experiences.Where(e => e.Uid == expId).OrderBy(b => b.ExpID).ToList();
+                var exp = db.Experiences.Where(e => e.Uid == uid).OrderBy(b => b.ExpID).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, exp);
 
             }
@@ -108,5 +108,90 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage AllExperienceGet()
+        {
+            try
+            {
+                var experiences = db.Experiences
+                    .OrderBy(e => e.ExpID)
+                    .Select(e => new
+                    {
+                        e.ExpID,
+                        e.Uid,
+                        e.Company,
+                        e.Title,
+                        e.Startdate,
+                        e.currentwork,
+                        e.Enddate,
+                        e.otherskill
+                    })
+                    .ToList();
+
+                if (!experiences.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Experience record not found");
+
+                return Request.CreateResponse(HttpStatusCode.OK, experiences);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewExperienceGet(int uid)
+        {
+            try
+            {
+                var experiences = db.Experiences
+                    .Where(e => e.Uid == uid)
+                    .OrderBy(e => e.ExpID)
+                    .Select(e => new
+                    {
+                        e.ExpID,
+                        e.Uid,
+                        e.Company,
+                        e.Title,
+                        e.Startdate,
+                        e.currentwork,
+                        e.Enddate,
+                        e.otherskill
+                    })
+                    .ToList();
+
+                if (!experiences.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Experience record not found");
+
+                return Request.CreateResponse(HttpStatusCode.OK, experiences);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
     }
 }

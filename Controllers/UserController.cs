@@ -81,6 +81,44 @@ namespace HrmPractise02.Controllers
         }
 
 
+        //[HttpGet]
+        //public HttpResponseMessage UserGet(int id)
+        //{
+        //    try
+        //    {
+        //        var user = db.Users
+        //            .Where(e => e.Uid == id)
+        //            .Select(u => new
+        //            {
+        //                u.Uid,
+        //                u.Fname,
+        //                u.Lname,
+        //                u.email,
+        //                u.mobile,
+        //                u.cnic,
+        //                u.dob,
+        //                u.gender,
+        //                u.address,
+        //                u.password,
+        //                u.role,
+        //                u.image
+        //            })
+        //            .FirstOrDefault();
+
+        //        if (user == null)
+        //        {
+        //            return Request.CreateResponse(HttpStatusCode.NotFound, "User not found");
+        //        }
+
+        //        return Request.CreateResponse(HttpStatusCode.OK, user);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
         //User Get by roles and Id
 
         //[HttpGet]
@@ -106,22 +144,38 @@ namespace HrmPractise02.Controllers
 
         //user get  by only roles
         [HttpGet]
-        public HttpResponseMessage UserroleGet()
-        {
-            try
+public HttpResponseMessage UserroleGet()
+{
+    try
+    {
+        var users = db.Users
+            .Where(u => u.role == "employee")
+            .OrderBy(u => u.Uid)
+            .Select(u => new
             {
-                // Filter records by role (employee and applicant)
-                var users = db.Users
-                    .Where(e => e.role == "employee" /*|| e.role == "applicant"*/)
-                    .OrderBy(b => b.Uid)
-                    .ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, users);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
+                u.Uid,
+                u.Fname,
+                u.Lname,
+                u.email,
+                u.mobile,
+                u.cnic,
+                u.dob,
+                u.gender,
+                u.address,
+                u.password,
+                u.role,
+                u.image
+            })
+            .ToList();
+
+        return Request.CreateResponse(HttpStatusCode.OK, users);
+    }
+    catch (Exception ex)
+    {
+        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+    }
+}
+
 
         // ALl User gets by roles
 
@@ -628,6 +682,95 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Api new Functions  Start From here
+
+        [HttpGet]
+        public HttpResponseMessage NewUserGet(int id)
+        {
+            try
+            {
+                var user = db.Users
+                    .Where(u => u.Uid == id)
+                    .Select(u => new
+                    {
+                        u.Uid,
+                        u.Fname,
+                        u.Lname,
+                        u.email,
+                        u.mobile,
+                        u.cnic,
+                        u.dob,
+                        u.gender,
+                        u.address,
+                        u.password,
+                        u.role,
+                        u.image
+                    })
+                    .SingleOrDefault();
+
+                if (user == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "User not found");
+
+                return Request.CreateResponse(HttpStatusCode.OK, user);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 

@@ -27,12 +27,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage CommitteeGet(int comid)
+        public HttpResponseMessage CommitteeWithMemberGet(int uid)
         {
             //select *from user
             try
             {
-                var edu = db.Committees.Where(e => e.CommitteeId == comid).OrderBy(b => b.CommitteeId).ToList();
+                var edu = db.CommitteeMembers.Where(e => e.Uid == uid).OrderBy(b => b.CommitteeId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
@@ -41,6 +41,26 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+        [HttpGet]
+        public HttpResponseMessage JobappWithCommitteeGet(int comid)
+        {
+            //select *from user
+            try
+            {
+                var edu = db.CommitteeMembers.Where(e => e.CommitteeId == comid).OrderBy(b => b.CommitteeId).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, edu);
+
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
         [HttpPost]
         public HttpResponseMessage Createcommittemember(CommitteeMember u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {

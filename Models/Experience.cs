@@ -22,7 +22,6 @@ namespace HrmPractise02
         public string currentwork { get; set; }
         public string Enddate { get; set; }
         public string otherskill { get; set; }
-        public string hasexperienced { get; set; }
     
         public virtual User User { get; set; }
     }
