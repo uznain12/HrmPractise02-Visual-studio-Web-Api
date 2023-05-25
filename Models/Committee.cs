@@ -18,6 +18,7 @@ namespace HrmPractise02
         public Committee()
         {
             this.CommitteeMembers = new HashSet<CommitteeMember>();
+            this.JobApplicationCommittees = new HashSet<JobApplicationCommittee>();
         }
     
         public int CommitteeId { get; set; }
@@ -27,5 +28,7 @@ namespace HrmPractise02
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommitteeMember> CommitteeMembers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JobApplicationCommittee> JobApplicationCommittees { get; set; }
     }
 }

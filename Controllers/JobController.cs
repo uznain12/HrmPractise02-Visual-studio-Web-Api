@@ -199,6 +199,73 @@ namespace HrmPractise02.Controllers
 
 
 
+        [HttpGet]
+        public HttpResponseMessage ForBestMatchWithCheckfilterJobGet(int uid)
+        {
+            try
+            {
+                // Get the user
+                var user = db.Users.Find(uid);
+
+                // Check if the user exists
+                if (user == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "User not found.");
+                }
+
+                // Check if the user has completed the education and experience sections
+                if (!user.Educations.Any() || !user.Experiences.Any())
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
+                }
+
+                // Get the highest degree of the user
+                var highestDegree = user.Educations.OrderByDescending(e => e.Degree).FirstOrDefault().Degree;
+
+                // Define the jobs query
+                IQueryable<Job> jobsQuery;
+
+                if (highestDegree == "PHD")
+                {
+                    jobsQuery = db.Jobs.Where(j => j.Title == "Professor" || j.Title == "Assistant Professor");
+                }
+                else if (highestDegree == "Bachelor") { jobsQuery = db.Jobs.Where(j => j.Title == "Junior Lecturer" || j.Title == "Lectruer"); }
+                else if (highestDegree == "Inter") { jobsQuery = db.Jobs.Where(j => j.Title == "Lab Attendant"); }
+                else if (highestDegree == "Matric") { jobsQuery = db.Jobs.Where(j => j.Title == "Guard"); }
+                else
+                {
+                    jobsQuery = db.Jobs;
+                }
+
+                // Get the jobs
+                var jobs = jobsQuery
+                    .OrderBy(j => j.Title)
+                    .Select(j => new
+                    {
+                        j.Jid,
+                        j.Title,
+                        j.qualification,
+                        j.Salary,
+                        j.experience,
+                        j.LastDateOfApply,
+                        j.Location,
+                        j.Description,
+                        j.noofvacancie
+                    })
+                    .ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, jobs);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
 
         [HttpGet]
         public HttpResponseMessage NewJobGet()
@@ -273,6 +340,65 @@ namespace HrmPractise02.Controllers
 
 
 
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewJobApplicationwithuserandjobGet(int uid)
+        {
+            try
+            {
+                var details = (from user in db.Users
+                               join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid // pahlay user or job application ko join kiya
+                               join job in db.Jobs on jobApplication.Jid equals job.Jid     //phir job and job application ko
+                               where user.Uid == uid  //phir condition lgai ha
+                               select new
+                               {
+                                   UserUid = user.Uid,
+                                   user.Fname,
+                                   user.Lname,
+                                   user.email,
+                                   user.mobile,
+                                   user.cnic,
+                                   user.dob,
+                                   user.gender,
+                                   user.address,
+                                   user.password,
+                                   user.role,
+                                   user.image,
+                                   jobApplication.JobApplicationID,
+                                   JobApplicationJid = jobApplication.Jid,
+                                   JobApplicationUid = jobApplication.Uid,
+                                   jobApplication.name,
+                                   jobApplication.status,
+                                   jobApplication.shortlist,
+                                   jobApplication.DocumentPath,
+                                   JobJid = job.Jid,
+                                   job.Title,
+                                   job.qualification,
+                                   job.Salary,
+                                   job.experience,
+                                   job.LastDateOfApply,
+                                   job.Location,
+                                   job.Description,
+                                   job.noofvacancie
+                               }).ToList();
+
+                if (!details.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No records found for the specified user ID.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, details);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+       
 
 
     }

@@ -7,16 +7,18 @@ using System.Web.Http;
 
 namespace HrmPractise02.Controllers
 {
-    public class CommitteemembersController : ApiController
+    public class AssignjobapplicationController : ApiController
     {
         PracticeHrmDBEntities db = new PracticeHrmDBEntities();
+
+
         [HttpGet]
-        public HttpResponseMessage AllCommittmembereeGet()
+        public HttpResponseMessage AllAssignmentGet()
         {
             //select *from user
             try
             {
-                var edu = db.CommitteeMembers.OrderBy(b => b.CommitteeImemberId).ToList();
+                var edu = db.JobApplicationCommittees.OrderBy(b => b.JobApplicationCommitteeeID).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
@@ -27,12 +29,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage CommitteeWithMemberGet(int uid)
+        public HttpResponseMessage AssignmentGet(int comid)
         {
             //select *from user
             try
             {
-                var edu = db.CommitteeMembers.Where(e => e.Uid == uid).OrderBy(b => b.CommitteeId).ToList();
+                var edu = db.JobApplicationCommittees.Where(e => e.CommitteeId == comid).OrderBy(b => b.CommitteeId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, edu);
 
             }
@@ -41,35 +43,15 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
-
-        [HttpGet]
-        public HttpResponseMessage JobappWithCommitteeGet(int comid)
-        {
-            //select *from user
-            try
-            {
-                var edu = db.CommitteeMembers.Where(e => e.CommitteeId == comid).OrderBy(b => b.CommitteeId).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, edu);
-
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-
-
         [HttpPost]
-        public HttpResponseMessage Createcommittemember(CommitteeMember u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
+        public HttpResponseMessage EducationPost(Education u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {
             try
             {
                 //Insert Into User Table
-                var educations = db.CommitteeMembers.Add(u);
+                var educations = db.Educations.Add(u);
                 db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, u.Uid + " " + "Record Inserted");
+                return Request.CreateResponse(HttpStatusCode.OK, u.Degree + " " + "Record Inserted");
             }
             catch (Exception ex)
             {
@@ -100,12 +82,12 @@ namespace HrmPractise02.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage DeleteCommitteMember(int CommitteeImemberId)
+        public HttpResponseMessage DeleteEducation(int EduID)
         {
             try
             {
 
-                var original = db.CommitteeMembers.Find(CommitteeImemberId);
+                var original = db.Educations.Find(EduID);
                 if (original == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No Record Found");

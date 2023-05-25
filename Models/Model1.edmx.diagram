@@ -24,6 +24,12 @@
         <AssociationConnector Association="PracticeHrmDBModel.FK_Experience_User" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.Job" Width="1.5" PointX="3.375" PointY="1" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplication_Job" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.JobApplicationCommittee" Width="1.5" PointX="8.25" PointY="21.875" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.jobremarkofmember" Width="1.5" PointX="8.25" PointY="18.125" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplicationCommittee_Committee" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_jobremarkofmember_CommitteeMembers" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

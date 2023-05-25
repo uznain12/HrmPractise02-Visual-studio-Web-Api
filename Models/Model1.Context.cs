@@ -18,7 +18,6 @@ namespace HrmPractise02
         public PracticeHrmDBEntities()
             : base("name=PracticeHrmDBEntities")
         {
-            //Configuration.LazyLoadingEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -36,5 +35,7 @@ namespace HrmPractise02
         public virtual DbSet<Education> Educations { get; set; }
         public virtual DbSet<Experience> Experiences { get; set; }
         public virtual DbSet<Job> Jobs { get; set; }
+        public virtual DbSet<JobApplicationCommittee> JobApplicationCommittees { get; set; }
+        public virtual DbSet<jobremarkofmember> jobremarkofmembers { get; set; }
     }
 }

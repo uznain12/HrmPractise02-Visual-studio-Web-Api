@@ -14,6 +14,13 @@ namespace HrmPractise02
     
     public partial class JobApplication
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public JobApplication()
+        {
+            this.JobApplicationCommittees = new HashSet<JobApplicationCommittee>();
+            this.jobremarkofmembers = new HashSet<jobremarkofmember>();
+        }
+    
         public int JobApplicationID { get; set; }
         public Nullable<int> Jid { get; set; }
         public Nullable<int> Uid { get; set; }
@@ -24,5 +31,9 @@ namespace HrmPractise02
     
         public virtual User User { get; set; }
         public virtual Job Job { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JobApplicationCommittee> JobApplicationCommittees { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<jobremarkofmember> jobremarkofmembers { get; set; }
     }
 }

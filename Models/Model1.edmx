@@ -84,6 +84,23 @@
           <Property Name="shortlist" Type="varchar" MaxLength="50" />
           <Property Name="DocumentPath" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="JobApplicationCommittee">
+          <Key>
+            <PropertyRef Name="JobApplicationCommitteeeID" />
+          </Key>
+          <Property Name="JobApplicationCommitteeeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobApplicationID" Type="int" />
+          <Property Name="CommitteeId" Type="int" />
+        </EntityType>
+        <EntityType Name="jobremarkofmember">
+          <Key>
+            <PropertyRef Name="RemarkID" />
+          </Key>
+          <Property Name="RemarkID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CommitteeImemberId" Type="int" />
+          <Property Name="JobApplicationID" Type="int" />
+          <Property Name="Remarks" Type="int" />
+        </EntityType>
         <EntityType Name="Leave_Application">
           <Key>
             <PropertyRef Name="leaveappid" />
@@ -234,6 +251,58 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_JobApplicationCommittee_Committee">
+          <End Role="Committee" Type="Self.Committee" Multiplicity="0..1" />
+          <End Role="JobApplicationCommittee" Type="Self.JobApplicationCommittee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Committee">
+              <PropertyRef Name="CommitteeId" />
+            </Principal>
+            <Dependent Role="JobApplicationCommittee">
+              <PropertyRef Name="CommitteeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_JobApplicationCommittee_JobApplication">
+          <End Role="JobApplication" Type="Self.JobApplication" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="JobApplicationCommittee" Type="Self.JobApplicationCommittee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobApplication">
+              <PropertyRef Name="JobApplicationID" />
+            </Principal>
+            <Dependent Role="JobApplicationCommittee">
+              <PropertyRef Name="JobApplicationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_jobremarkofmember_CommitteeMembers">
+          <End Role="CommitteeMembers" Type="Self.CommitteeMembers" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="jobremarkofmember" Type="Self.jobremarkofmember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CommitteeMembers">
+              <PropertyRef Name="CommitteeImemberId" />
+            </Principal>
+            <Dependent Role="jobremarkofmember">
+              <PropertyRef Name="CommitteeImemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_jobremarkofmember_JobApplication">
+          <End Role="JobApplication" Type="Self.JobApplication" Multiplicity="0..1" />
+          <End Role="jobremarkofmember" Type="Self.jobremarkofmember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobApplication">
+              <PropertyRef Name="JobApplicationID" />
+            </Principal>
+            <Dependent Role="jobremarkofmember">
+              <PropertyRef Name="JobApplicationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Leave_Application_User">
           <End Role="User" Type="Self.User" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -256,6 +325,8 @@
           <EntitySet Name="Experience" EntityType="Self.Experience" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="JobApplication" EntityType="Self.JobApplication" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobApplicationCommittee" EntityType="Self.JobApplicationCommittee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="jobremarkofmember" EntityType="Self.jobremarkofmember" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Leave_Application" EntityType="Self.Leave_Application" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
@@ -290,6 +361,22 @@
           <AssociationSet Name="FK_JobApplication_User" Association="Self.FK_JobApplication_User">
             <End Role="User" EntitySet="User" />
             <End Role="JobApplication" EntitySet="JobApplication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobApplicationCommittee_Committee" Association="Self.FK_JobApplicationCommittee_Committee">
+            <End Role="Committee" EntitySet="Committee" />
+            <End Role="JobApplicationCommittee" EntitySet="JobApplicationCommittee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobApplicationCommittee_JobApplication" Association="Self.FK_JobApplicationCommittee_JobApplication">
+            <End Role="JobApplication" EntitySet="JobApplication" />
+            <End Role="JobApplicationCommittee" EntitySet="JobApplicationCommittee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_jobremarkofmember_CommitteeMembers" Association="Self.FK_jobremarkofmember_CommitteeMembers">
+            <End Role="CommitteeMembers" EntitySet="CommitteeMembers" />
+            <End Role="jobremarkofmember" EntitySet="jobremarkofmember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_jobremarkofmember_JobApplication" Association="Self.FK_jobremarkofmember_JobApplication">
+            <End Role="JobApplication" EntitySet="JobApplication" />
+            <End Role="jobremarkofmember" EntitySet="jobremarkofmember" />
           </AssociationSet>
           <AssociationSet Name="FK_Leave_Application_User" Association="Self.FK_Leave_Application_User">
             <End Role="User" EntitySet="User" />
@@ -347,6 +434,24 @@
             <End Role="Job" EntitySet="Jobs" />
             <End Role="JobApplication" EntitySet="JobApplications" />
           </AssociationSet>
+          <EntitySet Name="JobApplicationCommittees" EntityType="PracticeHrmDBModel.JobApplicationCommittee" />
+          <EntitySet Name="jobremarkofmembers" EntityType="PracticeHrmDBModel.jobremarkofmember" />
+          <AssociationSet Name="FK_JobApplicationCommittee_Committee" Association="PracticeHrmDBModel.FK_JobApplicationCommittee_Committee">
+            <End Role="Committee" EntitySet="Committees" />
+            <End Role="JobApplicationCommittee" EntitySet="JobApplicationCommittees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_jobremarkofmember_CommitteeMembers" Association="PracticeHrmDBModel.FK_jobremarkofmember_CommitteeMembers">
+            <End Role="CommitteeMember" EntitySet="CommitteeMembers" />
+            <End Role="jobremarkofmember" EntitySet="jobremarkofmembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobApplicationCommittee_JobApplication" Association="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication">
+            <End Role="JobApplication" EntitySet="JobApplications" />
+            <End Role="JobApplicationCommittee" EntitySet="JobApplicationCommittees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_jobremarkofmember_JobApplication" Association="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication">
+            <End Role="JobApplication" EntitySet="JobApplications" />
+            <End Role="jobremarkofmember" EntitySet="jobremarkofmembers" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="sysdiagram">
           <Key>
@@ -371,6 +476,8 @@
           <Property Name="DocumentPath" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="User" Relationship="PracticeHrmDBModel.FK_JobApplication_User" FromRole="JobApplication" ToRole="User" />
           <NavigationProperty Name="Job" Relationship="PracticeHrmDBModel.FK_JobApplication_Job" FromRole="JobApplication" ToRole="Job" />
+          <NavigationProperty Name="JobApplicationCommittees" Relationship="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication" FromRole="JobApplication" ToRole="JobApplicationCommittee" />
+          <NavigationProperty Name="jobremarkofmembers" Relationship="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication" FromRole="JobApplication" ToRole="jobremarkofmember" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -473,6 +580,7 @@
           <Property Name="CommitteeHead" Type="Int32" />
           <NavigationProperty Name="User" Relationship="PracticeHrmDBModel.FK_Committee_User" FromRole="Committee" ToRole="User" />
           <NavigationProperty Name="CommitteeMembers" Relationship="PracticeHrmDBModel.FK_CommitteeMembers_Committee" FromRole="Committee" ToRole="CommitteeMember" />
+          <NavigationProperty Name="JobApplicationCommittees" Relationship="PracticeHrmDBModel.FK_JobApplicationCommittee_Committee" FromRole="Committee" ToRole="JobApplicationCommittee" />
         </EntityType>
         <EntityType Name="CommitteeMember">
           <Key>
@@ -483,6 +591,7 @@
           <Property Name="Uid" Type="Int32" />
           <NavigationProperty Name="Committee" Relationship="PracticeHrmDBModel.FK_CommitteeMembers_Committee" FromRole="CommitteeMember" ToRole="Committee" />
           <NavigationProperty Name="User" Relationship="PracticeHrmDBModel.FK_CommitteeMembers_User" FromRole="CommitteeMember" ToRole="User" />
+          <NavigationProperty Name="jobremarkofmembers" Relationship="PracticeHrmDBModel.FK_jobremarkofmember_CommitteeMembers" FromRole="CommitteeMember" ToRole="jobremarkofmember" />
         </EntityType>
         <Association Name="FK_Committee_User">
           <End Type="PracticeHrmDBModel.User" Role="User" Multiplicity="0..1">
@@ -606,6 +715,79 @@
             </Principal>
             <Dependent Role="JobApplication">
               <PropertyRef Name="Jid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="JobApplicationCommittee">
+          <Key>
+            <PropertyRef Name="JobApplicationCommitteeeID" />
+          </Key>
+          <Property Name="JobApplicationCommitteeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobApplicationID" Type="Int32" />
+          <Property Name="CommitteeId" Type="Int32" />
+          <NavigationProperty Name="Committee" Relationship="PracticeHrmDBModel.FK_JobApplicationCommittee_Committee" FromRole="JobApplicationCommittee" ToRole="Committee" />
+          <NavigationProperty Name="JobApplication" Relationship="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication" FromRole="JobApplicationCommittee" ToRole="JobApplication" />
+        </EntityType>
+        <EntityType Name="jobremarkofmember">
+          <Key>
+            <PropertyRef Name="RemarkID" />
+          </Key>
+          <Property Name="RemarkID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CommitteeImemberId" Type="Int32" />
+          <Property Name="JobApplicationID" Type="Int32" />
+          <Property Name="Remarks" Type="Int32" />
+          <NavigationProperty Name="CommitteeMember" Relationship="PracticeHrmDBModel.FK_jobremarkofmember_CommitteeMembers" FromRole="jobremarkofmember" ToRole="CommitteeMember" />
+          <NavigationProperty Name="JobApplication" Relationship="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication" FromRole="jobremarkofmember" ToRole="JobApplication" />
+        </EntityType>
+        <Association Name="FK_JobApplicationCommittee_Committee">
+          <End Type="PracticeHrmDBModel.Committee" Role="Committee" Multiplicity="0..1" />
+          <End Type="PracticeHrmDBModel.JobApplicationCommittee" Role="JobApplicationCommittee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Committee">
+              <PropertyRef Name="CommitteeId" />
+            </Principal>
+            <Dependent Role="JobApplicationCommittee">
+              <PropertyRef Name="CommitteeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_jobremarkofmember_CommitteeMembers">
+          <End Type="PracticeHrmDBModel.CommitteeMember" Role="CommitteeMember" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PracticeHrmDBModel.jobremarkofmember" Role="jobremarkofmember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CommitteeMember">
+              <PropertyRef Name="CommitteeImemberId" />
+            </Principal>
+            <Dependent Role="jobremarkofmember">
+              <PropertyRef Name="CommitteeImemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_JobApplicationCommittee_JobApplication">
+          <End Type="PracticeHrmDBModel.JobApplication" Role="JobApplication" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PracticeHrmDBModel.JobApplicationCommittee" Role="JobApplicationCommittee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobApplication">
+              <PropertyRef Name="JobApplicationID" />
+            </Principal>
+            <Dependent Role="JobApplicationCommittee">
+              <PropertyRef Name="JobApplicationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_jobremarkofmember_JobApplication">
+          <End Type="PracticeHrmDBModel.JobApplication" Role="JobApplication" Multiplicity="0..1" />
+          <End Type="PracticeHrmDBModel.jobremarkofmember" Role="jobremarkofmember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobApplication">
+              <PropertyRef Name="JobApplicationID" />
+            </Principal>
+            <Dependent Role="jobremarkofmember">
+              <PropertyRef Name="JobApplicationID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -741,6 +923,25 @@
                 <ScalarProperty Name="qualification" ColumnName="qualification" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Jid" ColumnName="Jid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobApplicationCommittees">
+            <EntityTypeMapping TypeName="PracticeHrmDBModel.JobApplicationCommittee">
+              <MappingFragment StoreEntitySet="JobApplicationCommittee">
+                <ScalarProperty Name="CommitteeId" ColumnName="CommitteeId" />
+                <ScalarProperty Name="JobApplicationID" ColumnName="JobApplicationID" />
+                <ScalarProperty Name="JobApplicationCommitteeeID" ColumnName="JobApplicationCommitteeeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="jobremarkofmembers">
+            <EntityTypeMapping TypeName="PracticeHrmDBModel.jobremarkofmember">
+              <MappingFragment StoreEntitySet="jobremarkofmember">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="JobApplicationID" ColumnName="JobApplicationID" />
+                <ScalarProperty Name="CommitteeImemberId" ColumnName="CommitteeImemberId" />
+                <ScalarProperty Name="RemarkID" ColumnName="RemarkID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

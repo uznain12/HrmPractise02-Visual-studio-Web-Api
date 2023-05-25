@@ -14,11 +14,19 @@ namespace HrmPractise02
     
     public partial class CommitteeMember
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public CommitteeMember()
+        {
+            this.jobremarkofmembers = new HashSet<jobremarkofmember>();
+        }
+    
         public int CommitteeImemberId { get; set; }
         public Nullable<int> CommitteeId { get; set; }
         public Nullable<int> Uid { get; set; }
     
         public virtual Committee Committee { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<jobremarkofmember> jobremarkofmembers { get; set; }
     }
 }

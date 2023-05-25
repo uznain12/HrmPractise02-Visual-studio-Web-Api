@@ -581,6 +581,59 @@ namespace HrmPractise02.Controllers
 
 
 
+        [HttpGet]
+        public HttpResponseMessage NewAllJobApplicationsGet()
+        {
+            try
+            {
+                var details = (from user in db.Users
+                               join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid
+                               join job in db.Jobs on jobApplication.Jid equals job.Jid
+                               where jobApplication.status == "pending"  //phir condition lgai ha
+                               select new
+                               {
+                                   UserUid = user.Uid,
+                                   user.Fname,
+                                   user.Lname,
+                                   user.email,
+                                   user.mobile,
+                                   user.cnic,
+                                   user.dob,
+                                   user.gender,
+                                   user.address,
+                                   user.password,
+                                   user.role,
+                                   user.image,
+                                   jobApplication.JobApplicationID,
+                                   JobApplicationJid = jobApplication.Jid,
+                                   JobApplicationUid = jobApplication.Uid,
+                                   jobApplication.name,
+                                   jobApplication.status,
+                                   jobApplication.shortlist,
+                                   jobApplication.DocumentPath,
+                                   JobJid = job.Jid,
+                                   job.Title,
+                                   job.qualification,
+                                   job.Salary,
+                                   job.experience,
+                                   job.LastDateOfApply,
+                                   job.Location,
+                                   job.Description,
+                                   job.noofvacancie
+                               }).ToList();
+
+                if (!details.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No job application records found.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, details);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
 
     }
 }
