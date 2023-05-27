@@ -11,8 +11,6 @@
         <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplication_User" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.Attendance" Width="1.5" PointX="3" PointY="10.25" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_Attendance_User" />
-        <EntityTypeShape EntityType="PracticeHrmDBModel.Leave_Application" Width="1.5" PointX="3" PointY="18.125" />
-        <AssociationConnector Association="PracticeHrmDBModel.FK_Leave_Application_User" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.Committee" Width="1.5" PointX="3" PointY="25.75" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.CommitteeMember" Width="1.5" PointX="5.25" PointY="20.5" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_Committee_User" />
@@ -22,14 +20,16 @@
         <EntityTypeShape EntityType="PracticeHrmDBModel.Experience" Width="1.5" PointX="3" PointY="22" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_Education_User" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_Experience_User" />
-        <EntityTypeShape EntityType="PracticeHrmDBModel.Job" Width="1.5" PointX="3.375" PointY="1" />
-        <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplication_Job" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.JobApplicationCommittee" Width="1.5" PointX="8.25" PointY="21.875" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.jobremarkofmember" Width="1.5" PointX="8.25" PointY="18.125" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplicationCommittee_Committee" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_jobremarkofmember_CommitteeMembers" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Job" Width="1.5" PointX="3.375" PointY="1" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplication_Job" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Leave_Application" Width="1.5" PointX="3" PointY="18.25" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_Leave_Application_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -71,6 +71,7 @@
           <Property Name="Location" Type="varchar" MaxLength="100" />
           <Property Name="Description" Type="varchar(max)" />
           <Property Name="noofvacancie" Type="int" />
+          <Property Name="jobstatus" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="JobApplication">
           <Key>
@@ -110,7 +111,7 @@
           <Property Name="leavetype" Type="varchar" MaxLength="50" />
           <Property Name="startdate" Type="nvarchar" MaxLength="50" />
           <Property Name="enddate" Type="nvarchar" MaxLength="50" />
-          <Property Name="reason" Type="varchar" MaxLength="50" />
+          <Property Name="reason" Type="varchar(max)" />
           <Property Name="status" Type="varchar" MaxLength="50" />
           <Property Name="applydate" Type="datetime" />
         </EntityType>
@@ -400,11 +401,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Attendance" EntitySet="Attendances" />
           </AssociationSet>
-          <EntitySet Name="Leave_Application" EntityType="PracticeHrmDBModel.Leave_Application" />
-          <AssociationSet Name="FK_Leave_Application_User" Association="PracticeHrmDBModel.FK_Leave_Application_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Leave_Application" EntitySet="Leave_Application" />
-          </AssociationSet>
           <EntitySet Name="Committees" EntityType="PracticeHrmDBModel.Committee" />
           <EntitySet Name="CommitteeMembers" EntityType="PracticeHrmDBModel.CommitteeMember" />
           <AssociationSet Name="FK_Committee_User" Association="PracticeHrmDBModel.FK_Committee_User">
@@ -429,11 +425,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Experience" EntitySet="Experiences" />
           </AssociationSet>
-          <EntitySet Name="Jobs" EntityType="PracticeHrmDBModel.Job" />
-          <AssociationSet Name="FK_JobApplication_Job" Association="PracticeHrmDBModel.FK_JobApplication_Job">
-            <End Role="Job" EntitySet="Jobs" />
-            <End Role="JobApplication" EntitySet="JobApplications" />
-          </AssociationSet>
           <EntitySet Name="JobApplicationCommittees" EntityType="PracticeHrmDBModel.JobApplicationCommittee" />
           <EntitySet Name="jobremarkofmembers" EntityType="PracticeHrmDBModel.jobremarkofmember" />
           <AssociationSet Name="FK_JobApplicationCommittee_Committee" Association="PracticeHrmDBModel.FK_JobApplicationCommittee_Committee">
@@ -451,6 +442,16 @@
           <AssociationSet Name="FK_jobremarkofmember_JobApplication" Association="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication">
             <End Role="JobApplication" EntitySet="JobApplications" />
             <End Role="jobremarkofmember" EntitySet="jobremarkofmembers" />
+          </AssociationSet>
+          <EntitySet Name="Jobs" EntityType="PracticeHrmDBModel.Job" />
+          <AssociationSet Name="FK_JobApplication_Job" Association="PracticeHrmDBModel.FK_JobApplication_Job">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="JobApplication" EntitySet="JobApplications" />
+          </AssociationSet>
+          <EntitySet Name="Leave_Application" EntityType="PracticeHrmDBModel.Leave_Application" />
+          <AssociationSet Name="FK_Leave_Application_User" Association="PracticeHrmDBModel.FK_Leave_Application_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Leave_Application" EntitySet="Leave_Application" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="sysdiagram">
@@ -475,9 +476,9 @@
           <Property Name="shortlist" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="DocumentPath" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="User" Relationship="PracticeHrmDBModel.FK_JobApplication_User" FromRole="JobApplication" ToRole="User" />
-          <NavigationProperty Name="Job" Relationship="PracticeHrmDBModel.FK_JobApplication_Job" FromRole="JobApplication" ToRole="Job" />
           <NavigationProperty Name="JobApplicationCommittees" Relationship="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication" FromRole="JobApplication" ToRole="JobApplicationCommittee" />
           <NavigationProperty Name="jobremarkofmembers" Relationship="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication" FromRole="JobApplication" ToRole="jobremarkofmember" />
+          <NavigationProperty Name="Job" Relationship="PracticeHrmDBModel.FK_JobApplication_Job" FromRole="JobApplication" ToRole="Job" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -497,11 +498,11 @@
           <Property Name="image" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="JobApplications" Relationship="PracticeHrmDBModel.FK_JobApplication_User" FromRole="User" ToRole="JobApplication" />
           <NavigationProperty Name="Attendances" Relationship="PracticeHrmDBModel.FK_Attendance_User" FromRole="User" ToRole="Attendance" />
-          <NavigationProperty Name="Leave_Application" Relationship="PracticeHrmDBModel.FK_Leave_Application_User" FromRole="User" ToRole="Leave_Application" />
           <NavigationProperty Name="Committees" Relationship="PracticeHrmDBModel.FK_Committee_User" FromRole="User" ToRole="Committee" />
           <NavigationProperty Name="CommitteeMembers" Relationship="PracticeHrmDBModel.FK_CommitteeMembers_User" FromRole="User" ToRole="CommitteeMember" />
           <NavigationProperty Name="Educations" Relationship="PracticeHrmDBModel.FK_Education_User" FromRole="User" ToRole="Education" />
           <NavigationProperty Name="Experiences" Relationship="PracticeHrmDBModel.FK_Experience_User" FromRole="User" ToRole="Experience" />
+          <NavigationProperty Name="Leave_Application" Relationship="PracticeHrmDBModel.FK_Leave_Application_User" FromRole="User" ToRole="Leave_Application" />
         </EntityType>
         <Association Name="FK_JobApplication_User">
           <End Type="PracticeHrmDBModel.User" Role="User" Multiplicity="0..1">
@@ -539,34 +540,6 @@
               <PropertyRef Name="Uid" />
             </Principal>
             <Dependent Role="Attendance">
-              <PropertyRef Name="Uid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Leave_Application">
-          <Key>
-            <PropertyRef Name="leaveappid" />
-          </Key>
-          <Property Name="leaveappid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Uid" Type="Int32" />
-          <Property Name="leavetype" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="startdate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="enddate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="reason" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="applydate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="User" Relationship="PracticeHrmDBModel.FK_Leave_Application_User" FromRole="Leave_Application" ToRole="User" />
-        </EntityType>
-        <Association Name="FK_Leave_Application_User">
-          <End Type="PracticeHrmDBModel.User" Role="User" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="PracticeHrmDBModel.Leave_Application" Role="Leave_Application" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Uid" />
-            </Principal>
-            <Dependent Role="Leave_Application">
               <PropertyRef Name="Uid" />
             </Dependent>
           </ReferentialConstraint>
@@ -689,35 +662,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Job">
-          <Key>
-            <PropertyRef Name="Jid" />
-          </Key>
-          <Property Name="Jid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="qualification" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Salary" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="experience" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LastDateOfApply" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Location" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="noofvacancie" Type="Int32" />
-          <NavigationProperty Name="JobApplications" Relationship="PracticeHrmDBModel.FK_JobApplication_Job" FromRole="Job" ToRole="JobApplication" />
-        </EntityType>
-        <Association Name="FK_JobApplication_Job">
-          <End Type="PracticeHrmDBModel.Job" Role="Job" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="PracticeHrmDBModel.JobApplication" Role="JobApplication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Job">
-              <PropertyRef Name="Jid" />
-            </Principal>
-            <Dependent Role="JobApplication">
-              <PropertyRef Name="Jid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="JobApplicationCommittee">
           <Key>
             <PropertyRef Name="JobApplicationCommitteeeID" />
@@ -791,6 +735,64 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Jid" />
+          </Key>
+          <Property Name="Jid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="qualification" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Salary" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="experience" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastDateOfApply" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Location" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="noofvacancie" Type="Int32" />
+          <Property Name="jobstatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="JobApplications" Relationship="PracticeHrmDBModel.FK_JobApplication_Job" FromRole="Job" ToRole="JobApplication" />
+        </EntityType>
+        <Association Name="FK_JobApplication_Job">
+          <End Type="PracticeHrmDBModel.Job" Role="Job" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PracticeHrmDBModel.JobApplication" Role="JobApplication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Jid" />
+            </Principal>
+            <Dependent Role="JobApplication">
+              <PropertyRef Name="Jid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Leave_Application">
+          <Key>
+            <PropertyRef Name="leaveappid" />
+          </Key>
+          <Property Name="leaveappid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Uid" Type="Int32" />
+          <Property Name="leavetype" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="startdate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="enddate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="applydate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="PracticeHrmDBModel.FK_Leave_Application_User" FromRole="Leave_Application" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Leave_Application_User">
+          <End Type="PracticeHrmDBModel.User" Role="User" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PracticeHrmDBModel.Leave_Application" Role="Leave_Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Uid" />
+            </Principal>
+            <Dependent Role="Leave_Application">
+              <PropertyRef Name="Uid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -851,20 +853,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Leave_Application">
-            <EntityTypeMapping TypeName="PracticeHrmDBModel.Leave_Application">
-              <MappingFragment StoreEntitySet="Leave_Application">
-                <ScalarProperty Name="applydate" ColumnName="applydate" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="reason" ColumnName="reason" />
-                <ScalarProperty Name="enddate" ColumnName="enddate" />
-                <ScalarProperty Name="startdate" ColumnName="startdate" />
-                <ScalarProperty Name="leavetype" ColumnName="leavetype" />
-                <ScalarProperty Name="Uid" ColumnName="Uid" />
-                <ScalarProperty Name="leaveappid" ColumnName="leaveappid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Committees">
             <EntityTypeMapping TypeName="PracticeHrmDBModel.Committee">
               <MappingFragment StoreEntitySet="Committee">
@@ -911,21 +899,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Jobs">
-            <EntityTypeMapping TypeName="PracticeHrmDBModel.Job">
-              <MappingFragment StoreEntitySet="Job">
-                <ScalarProperty Name="noofvacancie" ColumnName="noofvacancie" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="LastDateOfApply" ColumnName="LastDateOfApply" />
-                <ScalarProperty Name="experience" ColumnName="experience" />
-                <ScalarProperty Name="Salary" ColumnName="Salary" />
-                <ScalarProperty Name="qualification" ColumnName="qualification" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Jid" ColumnName="Jid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="JobApplicationCommittees">
             <EntityTypeMapping TypeName="PracticeHrmDBModel.JobApplicationCommittee">
               <MappingFragment StoreEntitySet="JobApplicationCommittee">
@@ -942,6 +915,36 @@
                 <ScalarProperty Name="JobApplicationID" ColumnName="JobApplicationID" />
                 <ScalarProperty Name="CommitteeImemberId" ColumnName="CommitteeImemberId" />
                 <ScalarProperty Name="RemarkID" ColumnName="RemarkID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jobs">
+            <EntityTypeMapping TypeName="PracticeHrmDBModel.Job">
+              <MappingFragment StoreEntitySet="Job">
+                <ScalarProperty Name="jobstatus" ColumnName="jobstatus" />
+                <ScalarProperty Name="noofvacancie" ColumnName="noofvacancie" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="LastDateOfApply" ColumnName="LastDateOfApply" />
+                <ScalarProperty Name="experience" ColumnName="experience" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+                <ScalarProperty Name="qualification" ColumnName="qualification" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Jid" ColumnName="Jid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Leave_Application">
+            <EntityTypeMapping TypeName="PracticeHrmDBModel.Leave_Application">
+              <MappingFragment StoreEntitySet="Leave_Application">
+                <ScalarProperty Name="applydate" ColumnName="applydate" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="reason" ColumnName="reason" />
+                <ScalarProperty Name="enddate" ColumnName="enddate" />
+                <ScalarProperty Name="startdate" ColumnName="startdate" />
+                <ScalarProperty Name="leavetype" ColumnName="leavetype" />
+                <ScalarProperty Name="Uid" ColumnName="Uid" />
+                <ScalarProperty Name="leaveappid" ColumnName="leaveappid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

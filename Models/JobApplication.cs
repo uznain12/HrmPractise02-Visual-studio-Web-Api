@@ -30,10 +30,10 @@ namespace HrmPractise02
         public string DocumentPath { get; set; }
     
         public virtual User User { get; set; }
-        public virtual Job Job { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobApplicationCommittee> JobApplicationCommittees { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<jobremarkofmember> jobremarkofmembers { get; set; }
+        public virtual Job Job { get; set; }
     }
 }

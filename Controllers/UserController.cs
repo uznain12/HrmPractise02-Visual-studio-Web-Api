@@ -40,6 +40,14 @@ namespace HrmPractise02.Controllers
             }
         }
 
+
+
+
+        //
+        //
+        //
+        //
+
         [HttpPost]
         public HttpResponseMessage Signup(User newuser)
         {
@@ -65,6 +73,17 @@ namespace HrmPractise02.Controllers
             }
 
         }
+
+
+
+
+        //
+        //
+        //
+        //
+        //
+
+
         [HttpGet]
         public HttpResponseMessage UserGet(int id)
         {
@@ -129,68 +148,6 @@ namespace HrmPractise02.Controllers
 
 
 
-        //[HttpGet]
-        //public HttpResponseMessage UserGet(int id)
-        //{
-        //    try
-        //    {
-        //        var user = db.Users
-        //            .Where(e => e.Uid == id)
-        //            .Select(u => new
-        //            {
-        //                u.Uid,
-        //                u.Fname,
-        //                u.Lname,
-        //                u.email,
-        //                u.mobile,
-        //                u.cnic,
-        //                u.dob,
-        //                u.gender,
-        //                u.address,
-        //                u.password,
-        //                u.role,
-        //                u.image
-        //            })
-        //            .FirstOrDefault();
-
-        //        if (user == null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "User not found");
-        //        }
-
-        //        return Request.CreateResponse(HttpStatusCode.OK, user);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
-
-
-        //User Get by roles and Id
-
-        //[HttpGet]
-        //public HttpResponseMessage UserroleGet(int id)
-        //{
-        //    try
-        //    {
-        //        // Filter records by role (employee and applicant)
-        //        var user = db.Users
-        //            .Where(e => e.Uid == id && (e.role == "employee" || e.role == "applicant"))
-        //            .OrderBy(b => b.Uid)
-        //            .ToList();
-        //        return Request.CreateResponse(HttpStatusCode.OK, user);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
-
-
-
-
-        //user get  by only roles
         [HttpGet]
 public HttpResponseMessage UserroleGet()
 {
@@ -233,7 +190,7 @@ public HttpResponseMessage UserroleGet()
             try
             {
                 var users = db.Users
-                    .Where(u => u.role == "employee")
+                    .Where(u => u.role == "hod")
                     .OrderBy(u => u.Uid)
                     .Select(u => new
                     {
@@ -259,7 +216,6 @@ public HttpResponseMessage UserroleGet()
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
 
         // ALl User gets by roles
 
@@ -320,75 +276,6 @@ public HttpResponseMessage UserroleGet()
         }
 
 
-
-
-
-
-
-
-        //FypDBEntities1 db = new FypDBEntities1();
-        //[Route("api/Product/Addproduct")]
-        //[HttpPost]
-        //public HttpResponseMessage Adduser()
-        //{
-        //    try
-        //    {
-        //        var form = HttpContext.Current.Request.Form;
-        //        string firstname = form["Fname"];
-        //        string lasttname = form["Lname"];
-        //        string email = form["email"];
-        //        string mobile = form["mobile"];
-        //        string cnic = form["cnic"];
-        //        string dob = form["dob"];
-        //        string gender = form["gender"];
-        //        string address = form["address"];
-        //        string password = form["password"];
-        //        string role = form["role"];
-        //        int qty = int.Parse(form["Qty"]);
-        //        string size = form["Size"];
-        //        int price = int.Parse(form["Price"]);
-        //        int Vid = int.Parse(form["VendorID"]);
-
-        //        var check = db.Accounts.Where(s => s.Status == false && s.UserType == "Vendor" && s.AcountId == Vid).FirstOrDefault();
-        //        if (check != null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "Your Account is on Pending");
-        //        }
-
-        //        var pro = db.Users.Where(s => s.email == email).FirstOrDefault();
-        //        if (pro != null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "Email Exist");
-        //        }
-
-
-
-        //        var files = HttpContext.Current.Request.Files;
-        //        DateTime dt = DateTime.Now;
-        //        string path = HttpContext.Current.Server.MapPath("~/Image");
-
-        //        if (!Directory.Exists(path))
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-        //        string fileData = "";
-        //        for (int i = 0; i < files.Count; i++)
-        //        {
-        //            fileData = files[i].FileName;
-        //            files[i].SaveAs(path + "/" + fileData);
-        //            User p = new User() { Fname = firstname, Lname = lasttname, email = email, mobile = mobile, cnic = cnic, dob = dob, gender = gender, address = address, password = password, role = role, image = fileData };
-        //            db.Users.Add(p);
-        //            db.SaveChanges();
-
-
-        //        }
-        //        return Request.CreateResponse(HttpStatusCode.OK, "Product Added Successfully");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
         [Route("api/User/Adduser")]
         [HttpPost]
         public HttpResponseMessage Adduser()
@@ -457,220 +344,6 @@ public HttpResponseMessage UserroleGet()
 
 
 
-        //[HttpPut]
-        //public HttpResponseMessage UpdateUser(User u)
-        //{
-        //    try
-        //    {
-
-        //        var original = db.Users.Find(u.Uid);
-        //        if (original == null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
-        //        }
-        //        db.Entry(original).CurrentValues.SetValues(u);
-        //        db.SaveChanges();
-        //        return Request.CreateResponse(HttpStatusCode.OK, "Record Updated");
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
-
-
-        //[HttpPut]
-        //public HttpResponseMessage UpdateUser()
-        //{
-        //    try
-        //    {
-        //        var form = HttpContext.Current.Request.Form;
-        //        int uid = Convert.ToInt32(form["Uid"]);
-        //        string Fname = form["Fname"];
-        //        string Lname = form["Lname"];
-        //        string email = form["email"];
-        //        string mobile = form["mobile"];
-        //        string cnic = form["cnic"];
-        //        string dob = form["dob"];
-        //        string gender = form["gender"];
-        //        string address = form["address"];
-        //        string password = form["password"];
-        //        string role = form["role"];
-
-        //        var original = db.Users.Find(uid);
-        //        if (original == null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
-        //        }
-
-        //        var files = HttpContext.Current.Request.Files;
-        //        byte[] imageData = null;
-        //        for (int i = 0; i < files.Count; i++)
-        //        {
-        //            var file = files[i];
-        //            string fileName = file.FileName;
-        //            using (var binaryReader = new BinaryReader(file.InputStream))
-        //            {
-        //                imageData = binaryReader.ReadBytes(file.ContentLength);
-        //            }
-        //        }
-
-        //        User u = new User()
-        //        {
-        //            Uid = uid,
-        //            Fname = Fname,
-        //            Lname = Lname,
-        //            email = email,
-        //            mobile = mobile,
-        //            cnic = cnic,
-        //            dob = dob,
-        //            gender = gender,
-        //            address = address,
-        //            password = password,
-        //            role = role
-        //        };
-
-        //        if (imageData != null)
-        //        {
-        //            u.image = imageData;
-        //        }
-
-        //        db.Entry(original).CurrentValues.SetValues(u);
-        //        db.SaveChanges();
-        //        return Request.CreateResponse(HttpStatusCode.OK, "Record Updated");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
-
-        //[HttpPut]
-        //public HttpResponseMessage UpdateUser([FromBody] User user)
-        //{
-        //    try
-        //    {
-        //        var form = HttpContext.Current.Request.Form;
-        //        int Uid = Convert.ToInt32(form["Uid"]);
-        //        string Fname = form["Fname"];
-        //        string Lname = form["Lname"];
-        //        string email = form["email"];
-        //        string mobile = form["mobile"];
-        //        string cnic = form["cnic"];
-        //        string dob = form["dob"];
-        //        string gender = form["gender"];
-        //        string address = form["address"];
-        //        string password = form["password"];
-        //        string role = form["role"];
-
-        //        var original = db.Users.Find(Uid);
-        //        if (original == null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
-        //        }
-
-        //        var files = HttpContext.Current.Request.Files;
-        //        string path = HttpContext.Current.Server.MapPath("~/image");
-
-        //        if (!Directory.Exists(path))
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-
-        //        string fileData = "";
-        //        for (int i = 0; i < files.Count; i++)
-        //        {
-        //            fileData = files[i].FileName;
-        //            files[i].SaveAs(path + "/" + fileData);
-        //        }
-
-        //        User u = new User()
-        //        {
-        //            Uid = Uid,
-        //            Fname = Fname,
-        //            Lname = Lname,
-        //            email = email,
-        //            mobile = mobile,
-        //            cnic = cnic,
-        //            dob = dob,
-        //            gender = gender,
-        //            address = address,
-        //            password = password,
-        //            role = role
-        //        };
-
-        //        if (fileData != null)
-        //        {
-        //            u.image = fileData;
-        //        }
-
-        //        db.Entry(original).CurrentValues.SetValues(u);
-        //        db.SaveChanges();
-        //        return Request.CreateResponse(HttpStatusCode.OK, "Record Updated");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
-        //[Route("api/User/UpdateUser")]
-
-        //[HttpPut]
-        //public HttpResponseMessage UpdateUser(int Uid, string Fname, string Lname, string email, string mobile, string cnic, string dob, string gender, string address, string password, string role)
-        //{
-        //    try
-        //    {
-        //        var original = db.Users.Find(Uid);
-        //        if (original == null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
-        //        }
-
-        //        var files = HttpContext.Current.Request.Files;
-        //        string path = HttpContext.Current.Server.MapPath("~/image");
-
-        //        if (!Directory.Exists(path))
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-
-        //        string fileData = "";
-        //        for (int i = 0; i < files.Count; i++)
-        //        {
-        //            fileData = files[i].FileName;
-        //            files[i].SaveAs(path + "/" + fileData);
-        //        }
-
-        //        User u = new User()
-        //        {
-        //            Uid = Uid,
-        //            Fname = Fname,
-        //            Lname = Lname,
-        //            email = email,
-        //            mobile = mobile,
-        //            cnic = cnic,
-        //            dob = dob,
-        //            gender = gender,
-        //            address = address,
-        //            password = password,
-        //            role = role
-        //        };
-
-        //        if (fileData != null)
-        //        {
-        //            u.image = fileData;
-        //        }
-
-        //        db.Entry(original).CurrentValues.SetValues(u);
-        //        db.SaveChanges();
-        //        return Request.CreateResponse(HttpStatusCode.OK, "Record Updated");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
 
         [Route("api/User/UpdateUser")]
         [HttpPut]

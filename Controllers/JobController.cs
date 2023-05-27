@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -173,7 +174,7 @@ namespace HrmPractise02.Controllers
                 }
 
                 // Get the jobs
-                var jobs = db.Jobs
+                var jobs = db.Jobs.Where(e=>e.jobstatus=="active")
                     .OrderBy(j => j.Title)
                     .Select(j => new
                     {
@@ -185,7 +186,8 @@ namespace HrmPractise02.Controllers
                         j.LastDateOfApply,
                         j.Location,
                         j.Description,
-                        j.noofvacancie
+                        j.noofvacancie,
+                        j.jobstatus
                     })
                     .ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, jobs);
@@ -195,6 +197,62 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
+
+        //[HttpGet]
+        //public HttpResponseMessage WithCheckfilterJobGet(int uid)
+        //{
+        //    try
+        //    {
+        //        // Get the user
+        //        var user = db.Users.Find(uid);
+
+        //        // Check if the user exists
+        //        if (user == null)
+        //        {
+        //            return Request.CreateResponse(HttpStatusCode.NotFound, "User not found.");
+        //        }
+
+        //        // Check if the user has completed the education and experience sections
+        //        if (!user.Educations.Any() || !user.Experiences.Any())
+        //        {
+        //            return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
+        //        }
+
+        //        // Update job statuses to expire if last date of apply has passed
+        //        var expiredJobs = db.Jobs.Where(j => j.jobstatus == "active" && DbFunctions.TruncateTime(j.LastDateOfApply) => DbFunctions.TruncateTime(DateTime.UtcNow)).ToList();
+
+        //        expiredJobs.ForEach(j => j.jobstatus = "expire");
+        //        db.SaveChanges();
+
+        //        // Get the jobs
+        //        var jobs = db.Jobs.Where(e => e.jobstatus == "active")
+        //            .OrderBy(j => j.Title)
+        //            .Select(j => new
+        //            {
+        //                j.Jid,
+        //                j.Title,
+        //                j.qualification,
+        //                j.Salary,
+        //                j.experience,
+        //                j.LastDateOfApply,
+        //                j.Location,
+        //                j.Description,
+        //                j.noofvacancie,
+        //                j.jobstatus
+        //            })
+        //            .ToList();
+        //        return Request.CreateResponse(HttpStatusCode.OK, jobs);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
 
 
 
@@ -229,6 +287,7 @@ namespace HrmPractise02.Controllers
                 {
                     jobsQuery = db.Jobs.Where(j => j.Title == "Professor" || j.Title == "Assistant Professor");
                 }
+                else if (highestDegree == "Master") { jobsQuery = db.Jobs.Where(j => j.Title == "Assistant Professor" || j.Title == "Lectruer"); }
                 else if (highestDegree == "Bachelor") { jobsQuery = db.Jobs.Where(j => j.Title == "Junior Lecturer" || j.Title == "Lectruer"); }
                 else if (highestDegree == "Inter") { jobsQuery = db.Jobs.Where(j => j.Title == "Lab Attendant"); }
                 else if (highestDegree == "Matric") { jobsQuery = db.Jobs.Where(j => j.Title == "Guard"); }
@@ -250,7 +309,9 @@ namespace HrmPractise02.Controllers
                         j.LastDateOfApply,
                         j.Location,
                         j.Description,
-                        j.noofvacancie
+                        j.noofvacancie,
+                        j.jobstatus
+
                     })
                     .ToList();
 

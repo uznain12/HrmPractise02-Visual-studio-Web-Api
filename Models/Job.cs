@@ -29,6 +29,7 @@ namespace HrmPractise02
         public string Location { get; set; }
         public string Description { get; set; }
         public Nullable<int> noofvacancie { get; set; }
+        public string jobstatus { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobApplication> JobApplications { get; set; }
