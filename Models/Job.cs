@@ -25,7 +25,7 @@ namespace HrmPractise02
         public string qualification { get; set; }
         public string Salary { get; set; }
         public string experience { get; set; }
-        public string LastDateOfApply { get; set; }
+        public Nullable<System.DateTime> LastDateOfApply { get; set; }
         public string Location { get; set; }
         public string Description { get; set; }
         public Nullable<int> noofvacancie { get; set; }

@@ -26,6 +26,21 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        [HttpGet]
+        public HttpResponseMessage NewAllCommitteeGet()
+        {
+            //select *from user
+            try
+            {
+                var edu = db.Committees.OrderBy(b => b.CommitteeId).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, edu);
+
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
         [HttpGet]
         public HttpResponseMessage CommitteeGet(int comid)

@@ -26,10 +26,10 @@
         <AssociationConnector Association="PracticeHrmDBModel.FK_jobremarkofmember_CommitteeMembers" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplicationCommittee_JobApplication" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_jobremarkofmember_JobApplication" />
-        <EntityTypeShape EntityType="PracticeHrmDBModel.Job" Width="1.5" PointX="3.375" PointY="1" />
-        <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplication_Job" />
         <EntityTypeShape EntityType="PracticeHrmDBModel.Leave_Application" Width="1.5" PointX="3" PointY="18.25" />
         <AssociationConnector Association="PracticeHrmDBModel.FK_Leave_Application_User" />
+        <EntityTypeShape EntityType="PracticeHrmDBModel.Job" Width="1.5" PointX="3.375" PointY="1" />
+        <AssociationConnector Association="PracticeHrmDBModel.FK_JobApplication_Job" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

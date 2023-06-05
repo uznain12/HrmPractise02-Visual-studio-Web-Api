@@ -173,6 +173,11 @@ namespace HrmPractise02.Controllers
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
                 }
 
+
+
+                // Update job statuses to "expire" if the last date of application has passed
+                UpdateExpiredJobStatus();
+
                 // Get the jobs
                 var jobs = db.Jobs.Where(e=>e.jobstatus=="active")
                     .OrderBy(j => j.Title)
@@ -202,60 +207,30 @@ namespace HrmPractise02.Controllers
 
 
 
-        //[HttpGet]
-        //public HttpResponseMessage WithCheckfilterJobGet(int uid)
-        //{
-        //    try
-        //    {
-        //        // Get the user
-        //        var user = db.Users.Find(uid);
+      
 
-        //        // Check if the user exists
-        //        if (user == null)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.NotFound, "User not found.");
-        //        }
+        // Call this method to update the job statuses to "expire" if the last date of application has passed
+        private void UpdateExpiredJobStatus()
+        {
+            try
+            {
+                DateTime currentDate = DateTime.Today;
 
-        //        // Check if the user has completed the education and experience sections
-        //        if (!user.Educations.Any() || !user.Experiences.Any())
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
-        //        }
+                var expiredJobs = db.Jobs.Where(j => j.LastDateOfApply < currentDate && j.jobstatus != "expire").ToList();
 
-        //        // Update job statuses to expire if last date of apply has passed
-        //        var expiredJobs = db.Jobs.Where(j => j.jobstatus == "active" && DbFunctions.TruncateTime(j.LastDateOfApply) => DbFunctions.TruncateTime(DateTime.UtcNow)).ToList();
+                foreach (var job in expiredJobs)
+                {
+                    job.jobstatus = "expire";
+                }
 
-        //        expiredJobs.ForEach(j => j.jobstatus = "expire");
-        //        db.SaveChanges();
-
-        //        // Get the jobs
-        //        var jobs = db.Jobs.Where(e => e.jobstatus == "active")
-        //            .OrderBy(j => j.Title)
-        //            .Select(j => new
-        //            {
-        //                j.Jid,
-        //                j.Title,
-        //                j.qualification,
-        //                j.Salary,
-        //                j.experience,
-        //                j.LastDateOfApply,
-        //                j.Location,
-        //                j.Description,
-        //                j.noofvacancie,
-        //                j.jobstatus
-        //            })
-        //            .ToList();
-        //        return Request.CreateResponse(HttpStatusCode.OK, jobs);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
-        //}
-
-
-
-
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately (e.g., log it or throw a custom exception)
+                throw new Exception("Failed to update expired job statuses.", ex);
+            }
+        }
 
         [HttpGet]
         public HttpResponseMessage ForBestMatchWithCheckfilterJobGet(int uid)
@@ -277,8 +252,11 @@ namespace HrmPractise02.Controllers
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
                 }
 
+                // Update job statuses to "expire" if the last date of application has passed
+                UpdateExpiredJobStatus();
+
                 // Get the highest degree of the user
-                var highestDegree = user.Educations.OrderByDescending(e => e.Degree).FirstOrDefault().Degree;
+                var highestDegree = user.Educations.OrderByDescending(e => e.Degree).FirstOrDefault()?.Degree;
 
                 // Define the jobs query
                 IQueryable<Job> jobsQuery;
@@ -287,10 +265,22 @@ namespace HrmPractise02.Controllers
                 {
                     jobsQuery = db.Jobs.Where(j => j.Title == "Professor" || j.Title == "Assistant Professor");
                 }
-                else if (highestDegree == "Master") { jobsQuery = db.Jobs.Where(j => j.Title == "Assistant Professor" || j.Title == "Lectruer"); }
-                else if (highestDegree == "Bachelor") { jobsQuery = db.Jobs.Where(j => j.Title == "Junior Lecturer" || j.Title == "Lectruer"); }
-                else if (highestDegree == "Inter") { jobsQuery = db.Jobs.Where(j => j.Title == "Lab Attendant"); }
-                else if (highestDegree == "Matric") { jobsQuery = db.Jobs.Where(j => j.Title == "Guard"); }
+                else if (highestDegree == "Master")
+                {
+                    jobsQuery = db.Jobs.Where(j => j.Title == "Junior Lecturer" || j.Title == "Lecturer");
+                }
+                else if (highestDegree == "Bachelor")
+                {
+                    jobsQuery = db.Jobs.Where(j => j.Title == "Junior Lecturer" || j.Title == "Lecturer");
+                }
+                else if (highestDegree == "Inter")
+                {
+                    jobsQuery = db.Jobs.Where(j => j.Title == "Lab Attendant");
+                }
+                else if (highestDegree == "Matric")
+                {
+                    jobsQuery = db.Jobs.Where(j => j.Title == "Guard");
+                }
                 else
                 {
                     jobsQuery = db.Jobs;
@@ -311,9 +301,44 @@ namespace HrmPractise02.Controllers
                         j.Description,
                         j.noofvacancie,
                         j.jobstatus
-
                     })
                     .ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, jobs);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately (e.g., log it or throw a custom exception)
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewJobGet()
+        {
+            try
+            {
+                var jobs = db.Jobs
+                    .OrderBy(j => j.Title)
+                    .Select(j => new
+                    {
+                        j.Jid,
+                        j.Title,
+                        j.qualification,
+                        j.Salary,
+                        j.experience,
+                        j.LastDateOfApply,
+                        j.Location,
+                        j.Description,
+                        j.noofvacancie
+                    })
+                    .ToList();
+
+                if (!jobs.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Job record not found");
 
                 return Request.CreateResponse(HttpStatusCode.OK, jobs);
             }
@@ -326,15 +351,13 @@ namespace HrmPractise02.Controllers
 
 
 
-
-
         [HttpGet]
-        public HttpResponseMessage NewJobGet()
+        public HttpResponseMessage NewJobWithIdGet(int jid)
         {
             try
             {
-                var jobs = db.Jobs
-                    .OrderBy(j => j.Jid)
+                var jobs = db.Jobs.Where(j=>j.Jid==jid )
+                    .OrderBy(j => j.Title)
                     .Select(j => new
                     {
                         j.Jid,
@@ -457,6 +480,10 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+
+
+
 
 
        

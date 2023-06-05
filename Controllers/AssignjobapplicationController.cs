@@ -44,20 +44,49 @@ namespace HrmPractise02.Controllers
             }
         }
         [HttpPost]
-        public HttpResponseMessage EducationPost(Education u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
+        public HttpResponseMessage AssinJobApplicationToCommittee(JobApplicationCommittee u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {
             try
             {
                 //Insert Into User Table
-                var educations = db.Educations.Add(u);
+                var educations = db.JobApplicationCommittees.Add(u);
                 db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, u.Degree + " " + "Record Inserted");
+                return Request.CreateResponse(HttpStatusCode.OK, u.CommitteeId + " " + "Record Inserted");
             }
             catch (Exception ex)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+        [HttpPost]
+        public HttpResponseMessage AssinJobApplicationToCommittee2(JobApplicationCommittee u)
+        {
+            try
+            {
+                // Check if the JobApplication has already been assigned to the Committee
+                var existingAssignment = db.JobApplicationCommittees
+                                           .FirstOrDefault(j => j.JobApplicationID == u.JobApplicationID );
+
+                if (existingAssignment != null)
+                {
+                    // If the assignment already exists, return a response indicating this
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "This Job Application has already been assigned to the Committee.");
+                }
+                else
+                {
+                    // If the assignment does not exist, add it to the JobApplicationCommittees table
+                    var newAssignment = db.JobApplicationCommittees.Add(u);
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, u.CommitteeId + " " + "Record Inserted");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
 
         [HttpPut]
         public HttpResponseMessage UpdateEducation(Education u)

@@ -26,12 +26,49 @@ namespace HrmPractise02.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        [HttpGet]
+        public HttpResponseMessage MembersRemarksGet(int jobid)
+        {
+            try
+            {
+                var result = (
+                    from jm in db.jobremarkofmembers
+                    join cm in db.CommitteeMembers on jm.CommitteeImemberId equals cm.CommitteeImemberId
+                    join u in db.Users on cm.Uid equals u.Uid
+                    join ja in db.JobApplications on jm.JobApplicationID equals ja.JobApplicationID
+                    join j in db.Jobs on ja.Jid equals j.Jid
+                    join app in db.Users on ja.Uid equals app.Uid
+                    where jm.JobApplicationID == jobid
+                    select new
+                    {
+                        MemberRemarks = jm.Remarks,
+                        CommitteeMemberName = string.Concat(u.Fname, " ", u.Lname),
+                        CommitteeMemberGender = u.gender,
+                        JobApplicationName = j.Title,
+                        ApplicantID = app.Uid,
+                        ApplicantName = string.Concat(app.Fname, " ", app.Lname)
+                    }).ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
         [HttpPost]
         public HttpResponseMessage RemarkPost(jobremarkofmember u)   // ya wala function value insert karnay ka liya bnaya or httpresppnsemesseage return type ha
         {
             try
             {
                 //Insert Into User Table
+                var user = db.jobremarkofmembers.FirstOrDefault(s => s.JobApplicationID == u.JobApplicationID && s.CommitteeImemberId == u.CommitteeImemberId);
+                if (user != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, "You Already Gave Remarks On This Job");
+
                 var educations = db.jobremarkofmembers.Add(u);
                 db.SaveChanges();
                 return Request.CreateResponse(HttpStatusCode.OK, u.RemarkID + " " + "Record Inserted");

@@ -208,7 +208,7 @@ namespace HrmPractise02.Controllers
             {
                 var applications = (from user in db.Users
                                     join leave in db.Leave_Application on user.Uid equals leave.Uid
-                                    orderby leave.leaveappid
+                                    orderby leave.leavetype
                                     select new
                                     {
                                         user.Uid,
@@ -290,6 +290,322 @@ namespace HrmPractise02.Controllers
 
 
 
+        //[HttpGet]
+        //public HttpResponseMessage NewLeaveWithIDGet(int leaveappid)
+        //{
+        //    try
+        //    {
+        //        int countSick = 0;
+        //        int countCasual = 0;
+        //        int countEarned = 0;
+        //        int countAnnual = 0;
+
+        //        var applications = (from user in db.Users
+        //                            join leave in db.Leave_Application on user.Uid equals leave.Uid
+        //                            where leave.Uid == leaveappid &&
+        //                                  (leave.leavetype == "Sick" || leave.leavetype == "Casual" || leave.leavetype == "Earned" || leave.leavetype == "Annual")
+        //                            orderby leave.leaveappid
+        //                            select new
+        //                            {
+        //                                user.Uid,
+        //                                user.Fname,
+        //                                user.Lname,
+        //                                user.email,
+        //                                user.mobile,
+        //                                user.cnic,
+        //                                user.dob,
+        //                                user.gender,
+        //                                user.address,
+        //                                user.password,
+        //                                user.role,
+        //                                user.image,
+        //                                leave.leaveappid,
+        //                                leave.leavetype,
+        //                                leave.startdate,
+        //                                leave.enddate,
+        //                                leave.reason,
+        //                                leave.status,
+        //                                leave.applydate
+        //                            }).ToList();
+
+        //        foreach (var application in applications)
+        //        {
+        //            if (application.leavetype == "Sick" && application.status == "approved")
+        //            {
+        //                if (countSick < 10)
+        //                    countSick++;
+        //                else
+        //                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of sick leave applications reached.");
+        //            }
+        //            else if (application.leavetype == "Casual" && application.status == "approved")
+        //            {
+        //                if (countCasual < 10)
+        //                    countCasual++;
+        //                else
+        //                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of casual leave applications reached.");
+        //            }
+        //            else if (application.leavetype == "Earned" && application.status == "approved")
+        //            {
+        //                if (countEarned < 10)
+        //                    countEarned++;
+        //                else
+        //                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of earned leave applications reached.");
+        //            }
+        //            else if (application.leavetype == "Annual" && application.status == "approved")
+        //            {
+        //                if (countAnnual < 10)
+        //                    countAnnual++;
+        //                else
+        //                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of annual leave applications reached.");
+        //            }
+        //        }
+
+        //        if (!applications.Any())
+        //            return Request.CreateResponse(HttpStatusCode.NotFound, $"No leave application records found for leaveappid: {leaveappid}.");
+
+        //        var response = new
+        //        {
+        //            TotalSick = countSick,
+        //            TotalACasual = countCasual,
+        //            TotalEarned = countEarned,
+        //            TotalAnnual = countAnnual,
+        //            Applications = applications
+        //        };
+
+        //        return Request.CreateResponse(HttpStatusCode.OK, response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
+        [HttpGet]
+        public HttpResponseMessage TotalNewLeaveWithIDGet(int uid)
+        {
+            try
+            {
+                int countSick = 0;
+                int countCasual = 0;
+                int countEarned = 0;
+                int countAnnual = 0;
+
+                int maxSick = 10;
+                int maxCasual = 5;
+                int maxEarned = 3;
+                int maxAnnual = 9;
+
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where leave.Uid == uid &&
+                                          (leave.leavetype == "Sick" || leave.leavetype == "Casual" || leave.leavetype == "Earned" || leave.leavetype == "Annual")
+                                    orderby leave.status
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).Distinct().ToList();
+
+                foreach (var application in applications)
+                {
+                    if (application.leavetype == "Sick" && application.status == "approved")
+                    {
+                        if (countSick < maxSick)
+                            countSick++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of sick leave applications reached.");
+                    }
+                    else if (application.leavetype == "Casual" && application.status == "approved")
+                    {
+                        if (countCasual < maxCasual)
+                            countCasual++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of casual leave applications reached.");
+                    }
+                    else if (application.leavetype == "Earned" && application.status == "approved")
+                    {
+                        if (countEarned < maxEarned)
+                            countEarned++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of earned leave applications reached.");
+                    }
+                    else if (application.leavetype == "Annual" && application.status == "approved")
+                    {
+                        if (countAnnual < maxAnnual)
+                            countAnnual++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of annual leave applications reached.");
+                    }
+                }
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, $"No leave application records found for leaveappid: {uid}.");
+
+                var response = new
+                {
+                    TotalSick = countSick,
+                    TotalACasual = countCasual,
+                    TotalEarned = countEarned,
+                    TotalAnnual = countAnnual,
+                    Applications = applications
+                };
+
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewLeaveWithIDGet(int leaveappid)
+        {
+            try
+            {
+                int countSick = 0;
+                int countCasual = 0;
+                int countEarned = 0;
+                int countAnnual = 0;
+
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where leave.Uid == leaveappid &&
+                                          (leave.leavetype == "Sick" || leave.leavetype == "Casual" || leave.leavetype == "Earned" || leave.leavetype == "Annual")
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                foreach (var application in applications)
+                {
+                    if (application.leavetype == "Sick" && application.status == "approved")
+                        countSick++;
+                    else if (application.leavetype == "Casual" && application.status == "approved")
+                        countCasual++;
+                    else if (application.leavetype == "Earned" && application.status == "approved")
+                        countEarned++;
+                    else if (application.leavetype == "Annual" && application.status == "approved")
+                        countAnnual++;
+                }
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, $"No leave application records found for leaveappid: {leaveappid}.");
+
+                var response = new
+                {
+                    TotalSick = countSick,
+                    TotalACasual = countCasual,
+                    TotalEarned = countEarned,
+                    TotalAnnual = countAnnual,
+                    Applications = applications
+                };
+
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+        [HttpGet]
+        public HttpResponseMessage WithNewLeaveWithIDGet(int leaveappid)
+        {
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where leave.Uid == leaveappid &&
+                                          (leave.leavetype == "Sick" || leave.leavetype == "Casual" || leave.leavetype == "Earned" || leave.leavetype == "Annual") &&
+                                          leave.status == "approved"
+                                    orderby leave.leaveappid
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).ToList();
+
+                int countApproved = applications.Count;
+
+                if (!applications.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, $"No approved leave application records found for leaveappid: {leaveappid}.");
+
+                var response = new
+                {
+                    TotalApproved = countApproved,
+                    Applications = applications
+                };
+
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
 
 
 
@@ -357,48 +673,57 @@ namespace HrmPractise02.Controllers
 
 
 
-        [HttpGet]
-        public HttpResponseMessage NewPendingLeaveGet(int uid)
+       [HttpGet]
+public HttpResponseMessage NewPendingLeaveGet(int uid)
+{
+    try
+    {
+        var applications = (from user in db.Users
+                            join leave in db.Leave_Application on user.Uid equals leave.Uid
+                            where user.Uid == uid && leave.status == "Pending"
+                            orderby leave.leaveappid
+                            select new
+                            {
+                                user.Uid,
+                                user.Fname,
+                                user.Lname,
+                                user.email,
+                                user.mobile,
+                                user.cnic,
+                                user.dob,
+                                user.gender,
+                                user.address,
+                                user.password,
+                                user.role,
+                                user.image,
+                                leave.leaveappid,
+                                leave.leavetype,
+                                leave.startdate,
+                                leave.enddate,
+                                leave.reason,
+                                leave.status,
+                                leave.applydate
+                            }).ToList();
+
+        int count = applications.Count;
+
+        if (count == 0)
+            return Request.CreateResponse(HttpStatusCode.NotFound, "Pending leave application records not found for the specified user.");
+
+        var response = new
         {
-            try
-            {
-                var applications = (from user in db.Users
-                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
-                                    where user.Uid == uid && leave.status == "Pending"
-                                    orderby leave.leaveappid
-                                    select new
-                                    {
-                                        user.Uid,
-                                        user.Fname,
-                                        user.Lname,
-                                        user.email,
-                                        user.mobile,
-                                        user.cnic,
-                                        user.dob,
-                                        user.gender,
-                                        user.address,
-                                        user.password,
-                                        user.role,
-                                        user.image,
-                                        leave.leaveappid,
-                                        leave.leavetype,
-                                        leave.startdate,
-                                        leave.enddate,
-                                        leave.reason,
-                                        leave.status,
-                                        leave.applydate
-                                    }).ToList();
+            TotalPending = count,
+            Applications = applications
+        };
 
-                if (!applications.Any())
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Pending leave application records not found for the specified user.");
+        return Request.CreateResponse(HttpStatusCode.OK, response);
+    }
+    catch (Exception ex)
+    {
+        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+    }
+}
 
-                return Request.CreateResponse(HttpStatusCode.OK, applications);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
 
 
 

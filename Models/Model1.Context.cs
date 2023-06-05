@@ -35,7 +35,7 @@ namespace HrmPractise02
         public virtual DbSet<Experience> Experiences { get; set; }
         public virtual DbSet<JobApplicationCommittee> JobApplicationCommittees { get; set; }
         public virtual DbSet<jobremarkofmember> jobremarkofmembers { get; set; }
-        public virtual DbSet<Job> Jobs { get; set; }
         public virtual DbSet<Leave_Application> Leave_Application { get; set; }
+        public virtual DbSet<Job> Jobs { get; set; }
     }
 }
