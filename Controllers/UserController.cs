@@ -418,6 +418,42 @@ public HttpResponseMessage UserroleGet()
         }
 
 
+
+
+        [HttpPut]
+        public HttpResponseMessage UpdateUsserAndAttributeReaminssame(User u)
+        {
+            try
+            {
+                var original = db.Users.Find(u.Uid);
+                if (original == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
+                }
+
+                // Exclude DocumentPath from being updated
+                u.Fname = original.Fname;
+                u.Lname = original.Lname;
+                u.email = original.email;
+                u.mobile = original.mobile;
+                u.cnic = original.cnic;
+                u.dob = original.dob;
+                u.gender = original.gender;
+                u.address = original.address;
+                u.password = original.password;
+                u.image = original.image;
+
+                db.Entry(original).CurrentValues.SetValues(u);
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Record Updated");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpGet]
         public HttpResponseMessage SearchUser(string u)
         {

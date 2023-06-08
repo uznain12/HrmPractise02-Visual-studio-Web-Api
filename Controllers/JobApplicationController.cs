@@ -147,22 +147,27 @@ namespace HrmPractise02.Controllers
         {
             try
             {
-
                 var original = db.JobApplications.Find(u.JobApplicationID);
                 if (original == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No record updated");
                 }
+
+                // Exclude DocumentPath from being updated
+                u.DocumentPath = original.DocumentPath;
+                u.Uid = original.Uid;
+                u.Jid = original.Jid;
+
                 db.Entry(original).CurrentValues.SetValues(u);
                 db.SaveChanges();
                 return Request.CreateResponse(HttpStatusCode.OK, "Record Updated");
-
             }
             catch (Exception ex)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
 
         [HttpPut]
         public HttpResponseMessage UpdateJobFileApplication()
@@ -885,7 +890,7 @@ namespace HrmPractise02.Controllers
                 var details = (from user in db.Users
                                join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid
                                join job in db.Jobs on jobApplication.Jid equals job.Jid
-                               where jobApplication.status == "Assign"  //phir condition lgai ha
+                               where jobApplication.status == "mark"  //phir condition lgai ha
                                select new
                                {
                                    UserUid = user.Uid,
