@@ -243,6 +243,121 @@ namespace HrmPractise02.Controllers
 
 
 
+
+        [HttpGet]
+        public HttpResponseMessage AgainnewRemainingTotalNewLeaveWithIDGet(int uid)
+        {
+            int countSick = 0;
+            int countCasual = 0;
+            int countEarned = 0;
+            int countAnnual = 0;
+
+            int maxSick = 10;
+            int maxCasual = 5;
+            int maxEarned = 3;
+            int maxAnnual = 9;
+
+            try
+            {
+                var applications = (from user in db.Users
+                                    join leave in db.Leave_Application on user.Uid equals leave.Uid
+                                    where leave.Uid == uid &&
+                                          (leave.leavetype == "Sick" || leave.leavetype == "Casual" || leave.leavetype == "Earned" || leave.leavetype == "Annual")
+                                    orderby leave.status
+                                    select new
+                                    {
+                                        user.Uid,
+                                        user.Fname,
+                                        user.Lname,
+                                        user.email,
+                                        user.mobile,
+                                        user.cnic,
+                                        user.dob,
+                                        user.gender,
+                                        user.address,
+                                        user.password,
+                                        user.role,
+                                        user.image,
+                                        leave.leaveappid,
+                                        leave.leavetype,
+                                        leave.startdate,
+                                        leave.enddate,
+                                        leave.reason,
+                                        leave.status,
+                                        leave.applydate
+                                    }).Distinct().ToList();
+
+                foreach (var application in applications)
+                {
+                    if (application.leavetype == "Sick" && application.status == "approved")
+                    {
+                        if (countSick < maxSick)
+                            countSick++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of sick leave applications reached.");
+                    }
+                    else if (application.leavetype == "Casual" && application.status == "approved")
+                    {
+                        if (countCasual < maxCasual)
+                            countCasual++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of casual leave applications reached.");
+                    }
+                    else if (application.leavetype == "Earned" && application.status == "approved")
+                    {
+                        if (countEarned < maxEarned)
+                            countEarned++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of earned leave applications reached.");
+                    }
+                    else if (application.leavetype == "Annual" && application.status == "approved")
+                    {
+                        if (countAnnual < maxAnnual)
+                            countAnnual++;
+                        else
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, "Maximum limit of annual leave applications reached.");
+                    }
+                }
+
+                int remainingSick = maxSick - countSick;
+                int remainingCasual = maxCasual - countCasual;
+                int remainingEarned = maxEarned - countEarned;
+                int remainingAnnual = maxAnnual - countAnnual;
+
+                if (applications.Count == 0)
+                {
+                    remainingSick = maxSick;
+                    remainingCasual = maxCasual;
+                    remainingEarned = maxEarned;
+                    remainingAnnual = maxAnnual;
+                }
+
+                var response = new
+                {
+                    TotalSick = countSick,
+                    TotalCasual = countCasual,
+                    TotalEarned = countEarned,
+                    TotalAnnual = countAnnual,
+                    MaxSickAllow = maxSick,
+                    MaxCasualAllow = maxCasual,
+                    MaxEarnedAllow = maxEarned,
+                    MaxAnnualAllow = maxAnnual,
+                    RemainingSick = remainingSick,
+                    RemainingCasual = remainingCasual,
+                    RemainingEarned = remainingEarned,
+                    RemainingAnnual = remainingAnnual,
+                    Applications = applications
+                };
+
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpPost]
         public HttpResponseMessage JobFileApplicationWithFilterPost2()
         {
@@ -685,6 +800,80 @@ namespace HrmPractise02.Controllers
                 }
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Applied");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage WithCheckfilterJobGet(int uid)
+        {
+            try
+            {
+                // Get the user
+                var user = db.Users.Find(uid);
+
+                // Check if the user exists
+                if (user == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "User not found.");
+                }
+
+                // Check if the user has completed the education and experience sections
+                if (!user.Educations.Any() || !user.Experiences.Any())
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Please complete the Education and Experience sections first.");
+                }
+
+                // Update job statuses to "expire" if the last date of application has passed
+               // UpdateExpiredJobStatus();  ya use hoga time ko update karnay ka liya
+
+                // Get the jobs
+                var jobs = db.Jobs.Where(j => j.jobstatus == "active")
+                    .Join(db.Educations.Where(e => e.Uid == uid && !(e.Institute.Equals("BIMS") || e.Institute.Equals("Iqra University"))),
+                        j => j.qualification,
+                        e => e.Degree,
+                        (j, e) => new
+                        {
+                            j.Jid,
+                            j.Title,
+                            j.qualification,
+                            j.Salary,
+                            j.experience,
+                            j.LastDateOfApply,
+                            j.Location,
+                            j.Description,
+                            j.noofvacancie,
+                            j.jobstatus
+                        })
+                    .OrderBy(j => j.Title)
+                    .ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, jobs);
             }
             catch (Exception ex)
             {

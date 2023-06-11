@@ -287,7 +287,7 @@ namespace HrmPractise02.Controllers
                 }
 
                 // Get the jobs
-                var jobs = jobsQuery
+                var jobs = jobsQuery.Where(j=>j.jobstatus== "active")
                     .OrderBy(j => j.Title)
                     .Select(j => new
                     {
