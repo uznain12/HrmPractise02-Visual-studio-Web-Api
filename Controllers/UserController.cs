@@ -155,7 +155,7 @@ public HttpResponseMessage UserroleGet()
     {
         var users = db.Users
             .Where(u => u.role == "employee")
-            .OrderBy(u => u.Uid)
+            .OrderBy(u => u.Fname)
             .Select(u => new
             {
                 u.Uid,
@@ -180,6 +180,40 @@ public HttpResponseMessage UserroleGet()
         return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
     }
 }
+
+
+        [HttpGet]
+        public HttpResponseMessage NewUserroleGet()
+        {
+            try
+            {
+                var users = db.Users
+                    .Where(u => u.role == "employee")
+                    .OrderBy(u => u.Fname)
+                    .Select(u => new
+                    {
+                        u.Uid,
+                        u.Fname,
+                        u.Lname,
+                        u.email,
+                        u.mobile,
+                        u.cnic,
+                        u.dob,
+                        u.gender,
+                        u.address,
+                        u.password,
+                        u.role,
+                        u.image
+                    })
+                    .ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, users);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
 
 

@@ -506,6 +506,60 @@ namespace HrmPractise02.Controllers
 
 
 
+        //[HttpGet]
+        //public HttpResponseMessage NewAttendanceGet(int uid)
+        //{
+        //    try
+        //    {
+        //        var currentTime = DateTime.Now;
+        //        var twelveHoursAgo = currentTime.AddHours(-12);
+
+        //        var attendance = db.Attendances
+        //            .Where(a => a.Uid == uid && a.date >= twelveHoursAgo)
+        //            .OrderBy(a => a.date)
+        //            .Select(a => new
+        //            {
+        //                a.Attendanceid,
+        //                a.Uid,
+        //                a.date,
+        //                a.checkin,
+        //                a.status,
+        //                a.checkout
+        //            })
+        //            .ToList();
+
+        //        // Check if the user has any recent attendance records
+        //        if (!attendance.Any())
+        //        {
+        //            // Mark the user as absent
+        //            var absentAttendance = new Attendance
+        //            {
+        //                Uid = uid,
+        //                date = currentTime,
+        //                status = "absent"
+        //            };
+        //            db.Attendances.Add(absentAttendance);
+        //            db.SaveChanges();
+
+        //            return Request.CreateResponse(HttpStatusCode.OK, new
+        //            {
+        //                AbsentAttendance = absentAttendance,
+        //                Message = "User marked as absent."
+        //            });
+        //        }
+
+        //        return Request.CreateResponse(HttpStatusCode.OK, attendance);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
+
+
+
 
 
         [HttpGet]

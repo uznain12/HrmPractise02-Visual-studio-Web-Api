@@ -883,5 +883,238 @@ namespace HrmPractise02.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage NewAllJobApplicationsGet()
+        {
+            try
+            {
+                var jobTitles = new List<string> { "Professor", "Assistant Professor", "Lectruer", "Junior Lecturer", "Lab Attendant", "Guard" };
+
+                var details = (from user in db.Users
+                               join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid
+                               join job in db.Jobs on jobApplication.Jid equals job.Jid where jobApplication.status== "Pending"
+                               select new
+                               {
+                                   UserUid = user.Uid,
+                                   user.Fname,
+                                   user.Lname,
+                                   user.email,
+                                   user.mobile,
+                                   user.cnic,
+                                   user.dob,
+                                   user.gender,
+                                   user.address,
+                                   user.password,
+                                   user.role,
+                                   user.image,
+                                   jobApplication.JobApplicationID,
+                                   JobApplicationJid = jobApplication.Jid,
+                                   JobApplicationUid = jobApplication.Uid,
+                                   jobApplication.name,
+                                   jobApplication.status,
+                                   jobApplication.shortlist,
+                                   jobApplication.DocumentPath,
+                                   JobJid = job.Jid,
+                                   job.Title,
+                                   job.qualification,
+                                   job.Salary,
+                                   job.experience,
+                                   job.LastDateOfApply,
+                                   job.Location,
+                                   job.Description,
+                                   job.noofvacancie
+                               }).ToList();
+
+                var jobApplicationsCount = jobTitles.Select(jobTitle => new
+                {
+                    JobTitle = jobTitle,
+                    PendingCount = details.Count(jobApplication => jobApplication.status == "Pending" && jobApplication.Title == jobTitle),
+                    RejectedCount = details.Count(jobApplication => jobApplication.status == "Rejected" && jobApplication.Title == jobTitle),
+                    MarkedCount = details.Count(jobApplication => jobApplication.status == "Marked" && jobApplication.Title == jobTitle)
+                }).ToList();
+
+                if (!details.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No job application records found.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, new
+                {
+                    JobApplications = details,
+                    JobApplicationsCount = jobApplicationsCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+        [HttpGet]
+        public HttpResponseMessage OnlyForAssistantProfessorGet()
+        {
+            try
+            {
+                var jobTitle = "Assistant Professor"; // Specify the job title
+
+                var details = (from user in db.Users
+                               join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid
+                               join job in db.Jobs on jobApplication.Jid equals job.Jid
+                               where jobApplication.status == "Pending" && job.Title == jobTitle
+                               select new
+                               {
+                                   UserUid = user.Uid,
+                                   user.Fname,
+                                   user.Lname,
+                                   user.email,
+                                   user.mobile,
+                                   user.cnic,
+                                   user.dob,
+                                   user.gender,
+                                   user.address,
+                                   user.password,
+                                   user.role,
+                                   user.image,
+                                   jobApplication.JobApplicationID,
+                                   JobApplicationJid = jobApplication.Jid,
+                                   JobApplicationUid = jobApplication.Uid,
+                                   jobApplication.name,
+                                   jobApplication.status,
+                                   jobApplication.shortlist,
+                                   jobApplication.DocumentPath,
+                                   JobJid = job.Jid,
+                                   job.Title,
+                                   job.qualification,
+                                   job.Salary,
+                                   job.experience,
+                                   job.LastDateOfApply,
+                                   job.Location,
+                                   job.Description,
+                                   job.noofvacancie
+                               }).ToList();
+
+                var jobApplicationsCount = new
+                {
+                    JobTitle = jobTitle,
+                    PendingCount = details.Count(jobApplication => jobApplication.status == "Pending"),
+                    RejectedCount = details.Count(jobApplication => jobApplication.status == "Rejected"),
+                    MarkedCount = details.Count(jobApplication => jobApplication.status == "Marked")
+                };
+
+                if (!details.Any())
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No job application records found.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, new
+                {
+                    JobApplications = details,
+                    JobApplicationsCount = jobApplicationsCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        public HttpResponseMessage OnlyForLabAttendantGet()
+        {
+            try
+            {
+                var jobTitle = "Lab Attendant"; // Specify the job title
+
+                var details = (from user in db.Users
+                               join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid
+                               join job in db.Jobs on jobApplication.Jid equals job.Jid
+                               where jobApplication.status == "Pending" && job.Title == jobTitle
+                               select new
+                               {
+                                   UserUid = user.Uid,
+                                   user.Fname,
+                                   user.Lname,
+                                   user.email,
+                                   user.mobile,
+                                   user.cnic,
+                                   user.dob,
+                                   user.gender,
+                                   user.address,
+                                   user.password,
+                                   user.role,
+                                   user.image,
+                                   jobApplication.JobApplicationID,
+                                   JobApplicationJid = jobApplication.Jid,
+                                   JobApplicationUid = jobApplication.Uid,
+                                   jobApplication.name,
+                                   jobApplication.status,
+                                   jobApplication.shortlist,
+                                   jobApplication.DocumentPath,
+                                   JobJid = job.Jid,
+                                   job.Title,
+                                   job.qualification,
+                                   job.Salary,
+                                   job.experience,
+                                   job.LastDateOfApply,
+                                   job.Location,
+                                   job.Description,
+                                   job.noofvacancie
+                               }).ToList();
+
+                var jobApplicationsCount = new
+                {
+                    JobTitle = jobTitle,
+                    PendingCount = details.Count(jobApplication => jobApplication.status == "Pending"),
+                    RejectedCount = details.Count(jobApplication => jobApplication.status == "Rejected"),
+                    MarkedCount = details.Count(jobApplication => jobApplication.status == "Marked")
+                };
+
+             
+
+                return Request.CreateResponse(HttpStatusCode.OK, new
+                {
+                    JobApplications = details,
+                    JobApplicationsCount = jobApplicationsCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
     }
 }

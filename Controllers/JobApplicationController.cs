@@ -882,6 +882,66 @@ namespace HrmPractise02.Controllers
         }
 
 
+        //           Pending Job Application Ko count karnay ka liya ha Ya 
+        //[HttpGet]
+        //public HttpResponseMessage NewAllJobApplicationsGet()
+        //{
+        //    try
+        //    {
+        //        int pendingApplicationsCount = db.JobApplications.Count(jobApplication => jobApplication.status == "pending");
+
+        //        var details = (from user in db.Users
+        //                       join jobApplication in db.JobApplications on user.Uid equals jobApplication.Uid
+        //                       join job in db.Jobs on jobApplication.Jid equals job.Jid
+        //                       where jobApplication.status == "pending"
+        //                       select new
+        //                       {
+        //                           UserUid = user.Uid,
+        //                           user.Fname,
+        //                           user.Lname,
+        //                           user.email,
+        //                           user.mobile,
+        //                           user.cnic,
+        //                           user.dob,
+        //                           user.gender,
+        //                           user.address,
+        //                           user.password,
+        //                           user.role,
+        //                           user.image,
+        //                           jobApplication.JobApplicationID,
+        //                           JobApplicationJid = jobApplication.Jid,
+        //                           JobApplicationUid = jobApplication.Uid,
+        //                           jobApplication.name,
+        //                           jobApplication.status,
+        //                           jobApplication.shortlist,
+        //                           jobApplication.DocumentPath,
+        //                           JobJid = job.Jid,
+        //                           job.Title,
+        //                           job.qualification,
+        //                           job.Salary,
+        //                           job.experience,
+        //                           job.LastDateOfApply,
+        //                           job.Location,
+        //                           job.Description,
+        //                           job.noofvacancie
+        //                       }).ToList();
+
+        //        if (!details.Any())
+        //            return Request.CreateResponse(HttpStatusCode.NotFound, "No job application records found.");
+
+        //        return Request.CreateResponse(HttpStatusCode.OK, new
+        //        {
+        //            PendingApplicationsCount = pendingApplicationsCount,
+        //            JobApplications = details
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
+        //}
+
+
         [HttpGet]
         public HttpResponseMessage AssignJobapplicationGet()
         {
